@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimuru Carx Store PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans">
+
+<div id="loginPage" class="flex items-center justify-center h-screen">
+    <div class="bg-slate-800 p-8 rounded-lg shadow-xl w-96 border border-blue-500">
+        <h2 class="text-2xl font-bold mb-6 text-center text-blue-400">RIMURU LOGIN</h2>
+        <input type="text" id="user" placeholder="Username" class="w-full p-2 mb-4 bg-slate-700 rounded border border-slate-600 focus:outline-none focus:border-blue-400">
+        <input type="password" id="pass" placeholder="Password" class="w-full p-2 mb-6 bg-slate-700 rounded border border-slate-600 focus:outline-none focus:border-blue-400">
+        <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded font-bold transition">MASUK</button>
+    </div>
+</div>
+
+<div id="mainPage" class="hidden max-w-2xl mx-auto mt-10 p-6 bg-slate-800 rounded-lg shadow-2xl">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-xl font-bold text-blue-400">Rimuru Carx Store PRO</h1>
+        <button onclick="location.reload()" class="text-xs bg-red-500 px-2 py-1 rounded">Logout</button>
+    </div>
+
+    <div id="userSection" class="space-y-4">
+        <label class="block">Pilih Paket Akun:</label>
+        <select id="paket" class="w-full p-2 bg-slate-700 rounded">
+            <option value="Bronze">Bronze Package</option>
+            <option value="Silver">Silver Package</option>
+            <option value="Gold">Gold Package</option>
+        </select>
+        
+        <label class="block mt-4">Upload Bukti Pembayaran (Wajib):</label>
+        <input type="file" id="imageInput" accept="image/*" class="w-full text-sm">
+        
+        <button id="genBtn" disabled onclick="handleGenerate()" class="w-full mt-6 bg-green-600 disabled:bg-gray-600 p-3 rounded-lg font-bold">GENERATE AKUN</button>
+        
+        <div id="result" class="mt-6 p-4 bg-slate-900 border-l-4 border-green-500 hidden">
+            <p class="text-sm text-gray-400">Detail Akun Anda:</p>
+            <div id="accDetails" class="mt-2 font-mono text-lg"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbybRIP1zrWIXlxuThYlR3NT-x9OJWzgeu6BlbR68l7P2X27yrCiPHJ88PZD1MO-0OzT/exec"; // Ganti ini!
+    let currentUser = "";
+    let hasGenerated = false;
+    let base64Image = "";
+
+    // Security: Anti F12 & Right Click
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0)))) return false;
+    }
+
+    // Handle Image Conversion
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            base64Image = reader.result;
+            document.getElementById('genBtn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    async function handleLogin() {
+        const user = document.getElementById('user').value;
+        const pass = document.getElementById('pass').value;
+        
+        const res = await fetch(WEBAPP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'login', user, pass })
+        });
+        const data = await res.json();
+
+        if(data.status === "success") {
+            currentUser = user;
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainPage').classList.remove('hidden');
+        } else {
+            alert(data.msg);
+        }
+    }
+
+    async function handleGenerate() {
+        if(hasGenerated) return alert("Anda sudah generate 1x di sesi ini!");
+        
+        const btn = document.getElementById('genBtn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        const paket = document.getElementById('paket').value;
+        const res = await fetch(WEBAPP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ 
+                action: 'generate', 
+                user: currentUser, 
+                paket: paket, 
+                image: base64Image 
+            })
+        });
+        const data = await res.json();
+
+        if(data.status === "success") {
+            hasGenerated = true;
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('accDetails').innerHTML = `Email: ${data.data.email}<br>Pass: ${data.data.pass}`;
+            btn.innerText = "SUKSES";
+        } else {
+            alert(data.msg);
+            btn.innerText = "GENERATE AKUN";
+            btn.disabled = false;
+        }
+    }
+</script>
+</body>
+</html>
