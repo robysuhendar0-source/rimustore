@@ -11,14 +11,9 @@
         .hidden { display: none; }
         .animate-pop { animation: pop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.49); }
         @keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        /* Glassmorphism Effect */
         .glass-card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        
-        /* Low Stock Warning Animation */
         .low-stock { animation: pulse-red 1.5s infinite; color: #ff4d4d; font-weight: 900; }
         @keyframes pulse-red { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .modal-overlay { background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); }
@@ -44,8 +39,8 @@
     </div>
 </div>
 
-<div id="userPassModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay" onclick="/* Lock Overlay */">
-    <div class="bg-slate-900 border border-slate-700 w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop shadow-2xl" onclick="event.stopPropagation()">
+<div id="userPassModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop shadow-2xl">
         <div class="p-6 bg-slate-800/50 border-b border-slate-800 text-center">
             <h2 class="text-blue-400 font-black tracking-widest uppercase text-sm italic">🔐 GANTI PASSWORD</h2>
         </div>
@@ -228,44 +223,37 @@ Price : 200k
         </div>
         <div class="flex gap-2">
             <button onclick="openModal('userPassModal')" class="bg-blue-600/10 text-blue-400 px-4 py-2 rounded-xl text-[10px] font-black border border-blue-500/20 active:scale-90">PASS</button>
-            <button onclick="handleLogout()" class="bg-red-500/10 text-red-500 px-4 py-2 rounded-xl text-[10px] font-black border border-red-500/20 active:scale-90 transition-all">LOGOUT</button>
+            <button onclick="handleLogout()" class="bg-red-500/10 text-red-500 px-4 py-2 rounded-xl text-[10px] font-black border border-red-500/20 active:scale-90">LOGOUT</button>
         </div>
     </div>
 
-    <div class="glass-card p-4 rounded-2xl mb-6 flex justify-between items-center text-sm font-black italic shadow-inner">
+    <div class="glass-card p-4 rounded-2xl mb-6 flex justify-between items-center text-sm font-black italic">
         <span class="text-slate-400 text-[10px]">OMSET ANDA:</span>
         <span id="userRevenue" class="text-emerald-400">Rp 0</span>
     </div>
 
     <div class="grid grid-cols-2 gap-2 mb-2">
-        <button onclick="openModal('priceModal')" class="glass-card p-4 rounded-2xl text-emerald-400 font-black text-[10px] tracking-widest shadow-lg active:scale-95">📋 PRICE RIMURU</button>
-        <button onclick="openModal('updateModal')" class="glass-card p-4 rounded-2xl text-slate-400 font-black text-[10px] tracking-widest shadow-lg active:scale-95 italic">📢 WHAT'S NEW</button>
+        <button onclick="openModal('priceModal')" class="glass-card p-4 rounded-2xl text-emerald-400 font-black text-[10px] tracking-widest shadow-lg">📋 PRICE RIMURU</button>
+        <button onclick="openModal('updateModal')" class="glass-card p-4 rounded-2xl text-slate-400 font-black text-[10px] tracking-widest shadow-lg italic">📢 WHAT'S NEW</button>
     </div>
-    <button onclick="openModal('resellerModal')" class="w-full glass-card p-4 rounded-2xl text-blue-400 font-black text-[10px] tracking-[0.3em] mb-6 shadow-lg active:scale-95">💰 PRICE USERS</button>
+    <button onclick="openModal('resellerModal')" class="w-full glass-card p-4 rounded-2xl text-blue-400 font-black text-[10px] tracking-[0.3em] mb-6 shadow-lg">💰 PRICE USERS</button>
 
     <div id="adminPanel" class="hidden mb-6 space-y-2">
         <div class="p-4 bg-orange-500/10 border border-orange-500/30 rounded-2xl">
             <h3 class="text-orange-400 font-black text-[10px] uppercase mb-4 tracking-widest text-center">🛡️ ADMIN CONTROL PANEL</h3>
-            
             <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 mb-4">
-                <p class="text-[8px] text-slate-500 font-bold mb-2 text-center uppercase">Statistik Penjualan Paket</p>
                 <canvas id="adminChart" class="w-full h-32"></canvas>
             </div>
-
             <div class="bg-slate-900/80 p-3 rounded-xl border border-orange-500/20 mb-4 flex justify-between items-center">
                 <span class="text-slate-500 text-[9px] font-black uppercase italic">OMSET KESELURUHAN:</span>
                 <span id="adminGlobalRevenue" class="text-orange-400 font-bold text-xs">Rp 0</span>
             </div>
-
-            <button onclick="syncDatabase()" id="btnSync" class="w-full bg-emerald-600 hover:bg-emerald-700 p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95 mb-4">
-                <span>🧹 RAPIHKAN SHEET</span>
-            </button>
-
+            <button onclick="syncDatabase()" id="btnSync" class="w-full bg-emerald-600 p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg mb-4 active:scale-95">🧹 RAPIHKAN SHEET</button>
             <div class="grid grid-cols-2 gap-2">
                 <button onclick="showAdminFeature('addUser')" class="bg-slate-900 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-slate-700">+ USER</button>
                 <button onclick="showAdminFeature('addStock')" class="bg-slate-900 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-slate-700">+ STOK</button>
+                <button onclick="showAdminFeature('deleteUser')" class="bg-slate-900 p-3 rounded-xl text-[9px] font-bold text-red-400 border border-red-500/30">HAPUS USER</button>
                 <button onclick="showAdminFeature('changePass')" class="bg-slate-900 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-slate-700">ADM PASS</button>
-                <button onclick="location.reload()" class="bg-slate-900 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-slate-700">RELOAD</button>
             </div>
             <div id="adminForm" class="hidden mt-4 pt-4 border-t border-slate-800 space-y-3">
                 <div id="formContent"></div>
@@ -275,375 +263,135 @@ Price : 200k
     </div>
 
     <div class="glass-card p-6 rounded-[2rem] mb-6 shadow-xl border-t border-white/5">
-        <label class="text-[10px] text-slate-400 font-bold mb-2 block uppercase px-1 tracking-widest italic">Pilih Paket:</label>
+        <label class="text-[10px] text-slate-400 font-bold mb-2 block uppercase tracking-widest italic">Pilih Paket:</label>
         <select id="paket" class="w-full p-4 mb-4 bg-slate-950 rounded-2xl border border-slate-800 text-sm text-white outline-none focus:border-blue-500"></select>
-        <label class="text-[10px] text-slate-400 font-bold mb-2 block uppercase px-1 tracking-widest italic">Bukti Transfer:</label>
-        <input type="file" id="bukti" accept="image/*" class="w-full text-xs text-slate-500 mb-6 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white file:font-bold">
-        <button id="btnGen" disabled onclick="handleGen()" class="w-full bg-blue-600 disabled:bg-slate-800 p-4 rounded-2xl font-black uppercase text-sm shadow-lg active:scale-95 transition-all">Generate Akun</button>
+        <label class="text-[10px] text-slate-400 font-bold mb-2 block uppercase tracking-widest italic">Bukti Transfer:</label>
+        <input type="file" id="bukti" accept="image/*" class="w-full text-xs text-slate-500 mb-6 file:py-2 file:px-4 file:rounded-xl file:bg-blue-600 file:text-white file:font-bold">
+        <button id="btnGen" disabled onclick="handleGen()" class="w-full bg-blue-600 disabled:bg-slate-800 p-4 rounded-2xl font-black uppercase text-sm shadow-lg active:scale-95">Generate Akun</button>
     </div>
 
     <div class="glass-card p-6 rounded-[2rem] mb-6 shadow-lg">
-        <div class="flex justify-between items-center mb-4 px-1">
+        <div class="flex justify-between items-center mb-4">
             <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest italic">Riwayat Transaksi</h3>
-            <span class="text-[8px] text-emerald-500 font-bold uppercase tracking-tighter">Border Hijau = Terbaru</span>
+            <span class="text-[8px] text-emerald-500 font-bold uppercase tracking-tighter">Terbaru</span>
         </div>
-        <div id="historyList" class="space-y-3 max-h-80 overflow-y-auto px-1 custom-scrollbar"></div>
+        <div id="historyList" class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar"></div>
     </div>
 </div>
 
 <script>
     const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzrX_iVdpJsAbuqqdZKBZ08BAUdqgyQCiAU3p563p9Lc3gi7jarLMjPs8BWT16QY76o/exec"; 
     const PAKET_LIST = ["Paket 10k", "Paket Hemat", "Paket 1", "Paket 2", "Paket 3", "Paket 4", "Paket 5", "Paket 6", "Safeban Newbie", "Safeban Pro"];
+    let base64Img = "", currentUser = "", currentRole = "", sessionToken = "", currentAdminAction = "";
 
-    let base64Img = "";
-    let currentUser = "";
-    let currentRole = "";
-    let sessionToken = "";
-    let currentAdminAction = "";
-
-    // =============================
-    // 🔐 SECURE FETCH (TOKEN BASED)
-    // =============================
     async function secureFetch(payload) {
         if(sessionToken) payload.token = sessionToken;
-        const res = await fetch(WEBAPP_URL, {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
+        const res = await fetch(WEBAPP_URL, { method: "POST", body: JSON.stringify(payload) });
         const data = await res.json();
-
-        if(data.status === "invalid_session"){
-            alert("Session expired. Login ulang.");
-            localStorage.clear();
-            location.reload();
-            return null;
-        }
+        if(data.status === "invalid_session"){ localStorage.clear(); location.reload(); return null; }
         return data;
     }
 
-    // =============================
-    // AUTO LOGIN VIA TOKEN
-    // =============================
     window.onload = function() {
-        const savedToken = localStorage.getItem("rimuru_token");
-        const savedUser  = localStorage.getItem("rimuru_user");
-        const savedRole  = localStorage.getItem("rimuru_role");
-
-        if(savedToken && savedUser && savedRole){
-            sessionToken = savedToken;
-            currentUser = savedUser;
-            currentRole = savedRole;
-            showApp(savedRole);
-        }
+        const savedToken = localStorage.getItem("rimuru_token"), savedUser = localStorage.getItem("rimuru_user"), savedRole = localStorage.getItem("rimuru_role");
+        if(savedToken && savedUser && savedRole){ sessionToken = savedToken; currentUser = savedUser; currentRole = savedRole; showApp(savedRole); }
     };
 
     function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
     function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
 
-    // =============================
-    // 🔐 LOGIN (TOKEN SYSTEM)
-    // =============================
     async function handleLogin(){
-        const user = document.getElementById('user').value;
-        const pass = document.getElementById('pass').value;
-        const btn = document.getElementById('btnLogin');
-
+        const user = document.getElementById('user').value, pass = document.getElementById('pass').value, btn = document.getElementById('btnLogin');
         if(!user || !pass) return alert("Isi Data!");
-
-        btn.innerText = "CHECKING...";
-        btn.disabled = true;
-
-        const res = await fetch(WEBAPP_URL,{
-            method:"POST",
-            body: JSON.stringify({action:"login", user, pass})
-        });
-
+        btn.innerText = "CHECKING..."; btn.disabled = true;
+        const res = await fetch(WEBAPP_URL,{ method:"POST", body: JSON.stringify({action:"login", user, pass}) });
         const data = await res.json();
-
         if(data.status === "success"){
-            sessionToken = data.token;
-            currentUser = user;
-            currentRole = data.role;
-
-            localStorage.setItem("rimuru_token", sessionToken);
-            localStorage.setItem("rimuru_user", user);
-            localStorage.setItem("rimuru_role", data.role);
-
+            sessionToken = data.token; currentUser = user; currentRole = data.role;
+            localStorage.setItem("rimuru_token", sessionToken); localStorage.setItem("rimuru_user", user); localStorage.setItem("rimuru_role", data.role);
             showApp(data.role);
-        }else{
-            alert(data.msg);
-            btn.innerText = "Masuk";
-            btn.disabled = false;
-        }
+        } else { alert(data.msg); btn.innerText = "Masuk"; btn.disabled = false; }
     }
 
-    // =============================
-    // SHOW APP (PARALLEL FETCHING)
-    // =============================
     async function showApp(role){
         document.getElementById('loginSection').classList.add('hidden');
         document.getElementById('appSection').classList.remove('hidden');
         document.getElementById('userStatusTag').innerText = "Logged in as : " + currentUser;
-
-        // Parallel Fetching for speed
-        const tasks = [updateStockUI(), loadHistory(), updateUserStats()];
-        if(role === "admin"){
-            document.getElementById('adminPanel').classList.remove('hidden');
-            document.getElementById('btnGen').disabled = false;
-            tasks.push(fetchAdminStats());
-        }
-
-        await Promise.all(tasks);
+        updateStockUI(); loadHistory(); updateUserStats();
+        if(role === "admin"){ document.getElementById('adminPanel').classList.remove('hidden'); document.getElementById('btnGen').disabled = false; fetchAdminStats(); }
     }
 
-    // =============================
-    // SYNC DATABASE (SECURE + SORT)
-    // =============================
-    async function syncDatabase(){
-        const btn = document.getElementById('btnSync');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "⌛ MEMPROSES...";
-        btn.disabled = true;
-
-        const data = await secureFetch({action:"syncSheet"});
-        if(!data) {
-            btn.innerHTML = originalText;
-            btn.disabled = false;
-            return;
-        }
-
-        alert("✨ " + data.msg);
-        location.reload();
-    }
-
-    // =============================
-    // USER CHANGE PASSWORD
-    // =============================
-    async function submitUserPass(event){
-        if(event){ event.preventDefault(); event.stopPropagation(); }
-
-        const pass = document.getElementById('u_newpass').value;
-        const btn = document.getElementById('btnUserPass');
-        if(!pass) return alert("Isi Password Baru!");
-
-        btn.innerText = "MEMPROSES...";
-        btn.disabled = true;
-
-        const data = await secureFetch({
-            action:"changePass",
-            newPass: pass
-        });
-
-        if(!data) return;
-
-        if(data.status === "success"){
-            alert("✅ Password Berhasil Diubah!");
-            document.getElementById('u_newpass').value="";
-            closeModal('userPassModal');
-        }else{
-            alert(data.msg);
-        }
-
-        btn.innerText="Simpan Password";
-        btn.disabled=false;
-    }
-
-    // =============================
-    // GENERATE AKUN (SECURE)
-    // =============================
     async function handleGen(){
-        const btn = document.getElementById('btnGen');
-        btn.innerText="GENERATE...";
-        btn.disabled=true;
-
-        const data = await secureFetch({
-            action:"generate",
-            paket: document.getElementById('paket').value,
-            image: base64Img
-        });
-
-        if(!data) return;
-
-        if(data.status === "success"){
+        const btn = document.getElementById('btnGen'); btn.innerText="GENERATE..."; btn.disabled=true;
+        const data = await secureFetch({ action:"generate", paket: document.getElementById('paket').value, image: base64Img });
+        if(data && data.status === "success"){
             document.getElementById('resPaket').innerText=data.paket;
             document.getElementById('resAccount').innerText=data.email+" | "+data.pass;
             openModal('resultModal');
-        }else{
-            alert(data.msg);
-            btn.innerText="Generate Akun";
-            btn.disabled=false;
-        }
+        } else { alert(data?data.msg:"Error"); btn.innerText="Generate Akun"; btn.disabled=false; }
     }
 
-    // =============================
-    // ADMIN FEATURE UI HANDLER
-    // =============================
     function showAdminFeature(type){
         currentAdminAction = type;
-        const form = document.getElementById('adminForm');
-        const content = document.getElementById('formContent');
-
+        const form = document.getElementById('adminForm'), content = document.getElementById('formContent');
         form.classList.remove('hidden');
-
-        if(type === "addUser"){
-            content.innerHTML = `
-                <input id="adm_user" placeholder="Username Baru"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
-                <input id="adm_pass" type="password" placeholder="Password"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
-            `;
-        }
-        else if(type === "addStock"){
-            content.innerHTML = `
-                <select id="adm_paket"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
-                    ${PAKET_LIST.map(p=>`<option value="${p}">${p}</option>`).join('')}
-                </select>
-                <textarea id="adm_data" placeholder="email|password"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs h-32"></textarea>
-            `;
-        }
-        else if(type === "changePass"){
-            content.innerHTML = `
-                <input id="adm_newpass" type="password" placeholder="Password Admin Baru"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
-            `;
-        }
+        if(type === "addUser") content.innerHTML = `<input id="adm_user" placeholder="Username Baru" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2"><input id="adm_pass" type="password" placeholder="Password" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">`;
+        else if(type === "addStock") content.innerHTML = `<select id="adm_paket" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">${PAKET_LIST.map(p=>`<option value="${p}">${p}</option>`).join('')}</select><textarea id="adm_data" placeholder="email|password" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs h-32"></textarea>`;
+        else if(type === "changePass") content.innerHTML = `<input id="adm_newpass" type="password" placeholder="Password Admin Baru" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">`;
+        else if(type === "deleteUser") content.innerHTML = `<input id="adm_del_user" placeholder="Username yang akan dihapus" class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs italic">`;
     }
 
-    // =============================
-    // FETCH ADMIN STATS
-    // =============================
-    async function fetchAdminStats(){
-        const data = await secureFetch({action:"getStats"});
-        if(!data) return;
-
-        document.getElementById('adminGlobalRevenue').innerText =
-            "Rp " + (data.revenue || 0).toLocaleString();
-
-        const ctx = document.getElementById('adminChart').getContext('2d');
-
-        if(window.adminChartInstance){
-            window.adminChartInstance.destroy();
-        }
-
-        window.adminChartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: Object.keys(data.chartData || {}),
-                datasets: [{
-                    label: 'Terjual',
-                    data: Object.values(data.chartData || {}),
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins:{legend:{display:false}}
-            }
-        });
-    }
-
-    // =============================
-    // COPY RESULT
-    // =============================
-    function copyAccountResult(){
-        const text = document.getElementById('resAccount').innerText;
-        navigator.clipboard.writeText(text);
-        alert("Akun disalin!");
-    }
-
-    // =============================
-    // ADMIN ACTION SUBMIT
-    // =============================
     async function submitAdminAction(){
-        const btn=document.getElementById('btnAdminSubmit');
-        btn.innerText="PROSES...";
-        btn.disabled=true;
-
+        const btn=document.getElementById('btnAdminSubmit'); btn.innerText="PROSES..."; btn.disabled=true;
         let payload={action:currentAdminAction};
-
-        if(currentAdminAction==="addUser"){
-            payload.newUser=document.getElementById('adm_user').value;
-            payload.newPass=document.getElementById('adm_pass').value;
-        }
-        else if(currentAdminAction==="addStock"){
-            payload.paket=document.getElementById('adm_paket').value;
-            payload.dataAkun=document.getElementById('adm_data').value;
-        }
-        else if(currentAdminAction==="changePass"){
-            payload.newPass=document.getElementById('adm_newpass').value;
-        }
-
+        if(currentAdminAction==="addUser"){ payload.newUser=document.getElementById('adm_user').value; payload.newPass=document.getElementById('adm_pass').value; }
+        else if(currentAdminAction==="addStock"){ payload.paket=document.getElementById('adm_paket').value; payload.dataAkun=document.getElementById('adm_data').value; }
+        else if(currentAdminAction==="changePass"){ payload.newPass=document.getElementById('adm_newpass').value; }
+        else if(currentAdminAction==="deleteUser"){ payload.targetUser=document.getElementById('adm_del_user').value; if(!confirm("Hapus "+payload.targetUser+"?")) return; }
         const data=await secureFetch(payload);
-        if(!data) return;
-
-        alert(data.msg);
-        location.reload();
+        if(data){ alert(data.msg); location.reload(); }
     }
 
-    // =============================
-    // HISTORY
-    // =============================
     async function loadHistory(){
         const data=await secureFetch({action:"getHistory"});
-        if(!data) return;
-
-        const container=document.getElementById('historyList');
-        if(!data.data || !data.data.length){
-            container.innerHTML='<p class="text-center text-[10px] text-slate-600 italic">No History</p>';
-            return;
-        }
-
-        container.innerHTML=data.data.map(h=>{
-            const dateObj=h.ts?new Date(h.ts):null;
-            const dateStr=dateObj?dateObj.toLocaleString('id-ID',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'---';
-
-            return `
-            <div class="bg-slate-900/50 p-4 rounded-2xl flex justify-between items-center border-l-4 ${h.isLast?'border-emerald-500 bg-emerald-500/10':'border-blue-500'} mb-2 shadow-lg">
-                <div class="flex-1 pr-2">
-                    <div class="flex justify-between items-start mb-1">
-                        <p class="text-[9px] font-black ${h.isLast?'text-emerald-400':'text-blue-400'} uppercase">${h.paket}</p>
-                        <span class="text-[8px] text-slate-500 font-bold">${dateStr}</span>
+        if(data && data.data){
+            document.getElementById('historyList').innerHTML=data.data.map(h=>{
+                const acc = h.email + " | " + h.pass;
+                return `<div class="bg-slate-900/50 p-4 rounded-2xl border-l-4 ${h.isLast?'border-emerald-500':'border-blue-500'} mb-2">
+                    <div class="flex justify-between text-[9px] font-black uppercase mb-1">
+                        <span class="${h.isLast?'text-emerald-400':'text-blue-400'}">${h.paket}</span>
                     </div>
-                    <p class="text-xs font-mono text-white opacity-80">${h.email} | ${h.pass}</p>
-                </div>
-            </div>`;
-        }).join('');
+                    <p class="text-xs font-mono text-white opacity-80 mb-2">${acc}</p>
+                    <button onclick="copyToClipboard('${acc}')" class="text-[8px] bg-blue-600/20 text-blue-400 px-2 py-1 rounded border border-blue-500/20 uppercase font-bold">Salin</button>
+                </div>`;
+            }).join('');
+        }
     }
 
+    function copyToClipboard(text){ navigator.clipboard.writeText(text); alert("Disalin!"); }
+    function copyAccountResult(){ copyToClipboard(document.getElementById('resAccount').innerText); }
+    
     async function updateStockUI(){
         const data=await secureFetch({action:"getStockDetail"});
-        if(!data) return;
-
-        document.getElementById('paket').innerHTML=PAKET_LIST.map(p=>{
-            const stock=data.stockMap[p]||0;
-            const isLow=stock>0&&stock<3;
-            return `<option value="${p}" ${stock===0?'disabled':''}>
-                ${p} (${stock} ${isLow?'🔥 LIMIT!':'Ready'})
-            </option>`;
+        if(data) document.getElementById('paket').innerHTML=PAKET_LIST.map(p=>{
+            const s=data.stockMap[p]||0;
+            return `<option value="${p}" ${s===0?'disabled':''}>${p} (${s} ${s<3&&s>0?'🔥':'Ready'})</option>`;
         }).join('');
     }
 
-    async function updateUserStats(){
-        const data=await secureFetch({action:"getUserStats"});
-        if(!data) return;
-        document.getElementById('userRevenue').innerText="Rp "+(data.revenue||0).toLocaleString();
-    }
-
-    function handleLogout(){
-        if(confirm("Apakah Anda yakin ingin keluar dari Rimuru Store?")){
-            localStorage.clear();
-            location.reload();
+    async function syncDatabase(){ const d=await secureFetch({action:"syncSheet"}); if(d){ alert(d.msg); location.reload(); } }
+    async function updateUserStats(){ const d=await secureFetch({action:"getUserStats"}); if(d) document.getElementById('userRevenue').innerText="Rp "+(d.revenue||0).toLocaleString(); }
+    async function fetchAdminStats(){
+        const data = await secureFetch({action:"getStats"});
+        if(data){
+            document.getElementById('adminGlobalRevenue').innerText = "Rp " + (data.revenue || 0).toLocaleString();
+            new Chart(document.getElementById('adminChart'), { type: 'bar', data: { labels: Object.keys(data.chartData), datasets: [{ data: Object.values(data.chartData), backgroundColor: '#3b82f6' }] }, options: { plugins:{legend:{display:false}} } });
         }
     }
 
-    document.getElementById('bukti').onchange=(e)=>{
-        const file=e.target.files[0];
-        if(!file) return;
-        const r=new FileReader();
-        r.onload=()=>{ base64Img=r.result; document.getElementById('btnGen').disabled=false; };
-        r.readAsDataURL(file);
-    };
+    function handleLogout(){ if(confirm("Keluar?")){ localStorage.clear(); location.reload(); } }
+    document.getElementById('bukti').onchange=(e)=>{ const r=new FileReader(); r.onload=()=>{ base64Img=r.result; document.getElementById('btnGen').disabled=false; }; r.readAsDataURL(e.target.files[0]); };
 </script>
 </body>
 </html>
+
