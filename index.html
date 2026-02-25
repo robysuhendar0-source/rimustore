@@ -377,24 +377,27 @@ Price : 200k
         }
     }
 
-    function showApp(role){
+    // =============================
+    // SHOW APP (PARALLEL FETCHING)
+    // =============================
+    async function showApp(role){
         document.getElementById('loginSection').classList.add('hidden');
         document.getElementById('appSection').classList.remove('hidden');
         document.getElementById('userStatusTag').innerText = "Logged in as : " + currentUser;
 
+        // Parallel Fetching for speed
+        const tasks = [updateStockUI(), loadHistory(), updateUserStats()];
         if(role === "admin"){
             document.getElementById('adminPanel').classList.remove('hidden');
             document.getElementById('btnGen').disabled = false;
-            fetchAdminStats();
+            tasks.push(fetchAdminStats());
         }
 
-        updateStockUI();
-        loadHistory();
-        updateUserStats();
+        await Promise.all(tasks);
     }
 
     // =============================
-    // SYNC DATABASE (SECURE)
+    // SYNC DATABASE (SECURE + SORT)
     // =============================
     async function syncDatabase(){
         const btn = document.getElementById('btnSync');
