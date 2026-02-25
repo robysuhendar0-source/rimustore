@@ -292,7 +292,7 @@ Price : 200k
 </div>
 
 <script>
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzrX_iVdpJsAbuqqdZKBZ08BAUdqgyQCiAU3p563p9Lc3gi7jarLMjPs8BWT16QY76o/exec"; 
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRwk8CtNXjuwGRVoxsA88KxNAzy-29BSovXFweLh-MChRkeFXOheJgVHyhuF-VaOE/exec"; 
     const PAKET_LIST = ["Paket 10k", "Paket Hemat", "Paket 1", "Paket 2", "Paket 3", "Paket 4", "Paket 5", "Paket 6", "Safeban Newbie", "Safeban Pro"];
 
     let base64Img = "";
@@ -468,7 +468,84 @@ Price : 200k
     }
 
     // =============================
-    // ADMIN ACTION
+    // ADMIN FEATURE UI HANDLER
+    // =============================
+    function showAdminFeature(type){
+        currentAdminAction = type;
+        const form = document.getElementById('adminForm');
+        const content = document.getElementById('formContent');
+
+        form.classList.remove('hidden');
+
+        if(type === "addUser"){
+            content.innerHTML = `
+                <input id="adm_user" placeholder="Username Baru"
+                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
+                <input id="adm_pass" type="password" placeholder="Password"
+                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
+            `;
+        }
+        else if(type === "addStock"){
+            content.innerHTML = `
+                <select id="adm_paket"
+                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
+                    ${PAKET_LIST.map(p=>`<option value="${p}">${p}</option>`).join('')}
+                </select>
+                <textarea id="adm_data" placeholder="email|password"
+                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs h-32"></textarea>
+            `;
+        }
+        else if(type === "changePass"){
+            content.innerHTML = `
+                <input id="adm_newpass" type="password" placeholder="Password Admin Baru"
+                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
+            `;
+        }
+    }
+
+    // =============================
+    // FETCH ADMIN STATS
+    // =============================
+    async function fetchAdminStats(){
+        const data = await secureFetch({action:"getStats"});
+        if(!data) return;
+
+        document.getElementById('adminGlobalRevenue').innerText =
+            "Rp " + (data.revenue || 0).toLocaleString();
+
+        const ctx = document.getElementById('adminChart').getContext('2d');
+
+        if(window.adminChartInstance){
+            window.adminChartInstance.destroy();
+        }
+
+        window.adminChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data.chartData || {}),
+                datasets: [{
+                    label: 'Terjual',
+                    data: Object.values(data.chartData || {}),
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins:{legend:{display:false}}
+            }
+        });
+    }
+
+    // =============================
+    // COPY RESULT
+    // =============================
+    function copyAccountResult(){
+        const text = document.getElementById('resAccount').innerText;
+        navigator.clipboard.writeText(text);
+        alert("Akun disalin!");
+    }
+
+    // =============================
+    // ADMIN ACTION SUBMIT
     // =============================
     async function submitAdminAction(){
         const btn=document.getElementById('btnAdminSubmit');
@@ -551,79 +628,6 @@ Price : 200k
             location.reload();
         }
     }
-
-    // =============================
-    // ADMIN FEATURE UI HANDLER
-    // =============================
-    function showAdminFeature(type){
-        currentAdminAction = type;
-        const form = document.getElementById('adminForm');
-        const content = document.getElementById('formContent');
-
-        form.classList.remove('hidden');
-
-        if(type === "addUser"){
-            content.innerHTML = `
-                <input id="adm_user" placeholder="Username Baru"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
-                <input id="adm_pass" type="password" placeholder="Password"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
-            `;
-        }
-        else if(type === "addStock"){
-            content.innerHTML = `
-                <select id="adm_paket"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs mb-2">
-                    ${PAKET_LIST.map(p=>`<option value="${p}">${p}</option>`).join('')}
-                </select>
-                <textarea id="adm_data" placeholder="email|password"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs h-32"></textarea>
-            `;
-        }
-        else if(type === "changePass"){
-            content.innerHTML = `
-                <input id="adm_newpass" type="password" placeholder="Password Admin Baru"
-                    class="w-full p-3 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs">
-            `;
-        }
-    }
-
-    // =============================
-// FETCH ADMIN STATS
-// =============================
-async function fetchAdminStats(){
-    const data = await secureFetch({action:"getStats"});
-    if(!data) return;
-
-    document.getElementById('adminGlobalRevenue').innerText =
-        "Rp " + (data.revenue || 0).toLocaleString();
-
-    const ctx = document.getElementById('adminChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(data.chartData || {}),
-            datasets: [{
-                label: 'Terjual',
-                data: Object.values(data.chartData || {}),
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins:{legend:{display:false}}
-        }
-    });
-}
-
-// =============================
-// COPY RESULT
-// =============================
-function copyAccountResult(){
-    const text = document.getElementById('resAccount').innerText;
-    navigator.clipboard.writeText(text);
-    alert("Akun disalin!");
-}
 
     document.getElementById('bukti').onchange=(e)=>{
         const file=e.target.files[0];
