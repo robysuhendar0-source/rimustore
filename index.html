@@ -398,11 +398,16 @@ Price : 200k
     // =============================
     async function syncDatabase(){
         const btn = document.getElementById('btnSync');
+        const originalText = btn.innerHTML;
         btn.innerHTML = "⌛ MEMPROSES...";
         btn.disabled = true;
 
         const data = await secureFetch({action:"syncSheet"});
-        if(!data) return;
+        if(!data) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+        }
 
         alert("✨ " + data.msg);
         location.reload();
@@ -639,5 +644,3 @@ Price : 200k
 </script>
 </body>
 </html>
-
-
