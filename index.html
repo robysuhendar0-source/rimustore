@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rimuru Store V5.8 Official</title>
+    <title>Rimuru Store V5.9 Official</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -81,16 +81,16 @@
         </div> 
         <div class="p-6 overflow-y-auto max-h-[60vh] text-[11px] space-y-4">
             <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700">
-                <p class="text-emerald-400 font-bold mb-1">✅ V7.2: Ultimate Performance</p>
+                <p class="text-emerald-400 font-bold mb-1">✅ V8.6: Admin Revenue x2</p>
+                <p class="text-slate-400">Logika harga otomatis x2 jika di-generate oleh Rimuru (Admin).</p>
+            </div>
+            <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700">
+                <p class="text-orange-400 font-bold mb-1">🚀 V7.2: Ultimate Performance</p>
                 <p class="text-slate-400">Pemisahan Database SOLD & READY, Auto-Sorting, dan Tombol "Rapihkan Sheet".</p>
             </div>
             <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700">
-                <p class="text-orange-400 font-bold mb-1">🚀 V7.0: Telegram Bot</p>
-                <p class="text-slate-400">Integrasi bot notifikasi Telegram otomatis.</p>
-            </div>
-            <div class="bg-slate-800/50 p-3 rounded-2xl border border-slate-700">
                 <p class="text-sky-400 font-bold mb-1">✅ V5.8: PRO Dashboard</p>
-                <p class="text-slate-400">Pembaruan tampilan Glassmorphism, Grafik penjualan admin, dan Peringatan stok tipis.</p>
+                <p class="text-slate-400">Pembaruan tampilan Glassmorphism dan Grafik penjualan.</p>
             </div>
         </div>
         <div class="p-4"><button onclick="closeModal('updateModal')" class="w-full bg-blue-600 p-4 rounded-2xl font-black text-xs uppercase shadow-lg">Tutup</button></div>
@@ -143,6 +143,7 @@
 ● UNLOCK NEW PREMIUM CAR Lexus LFA & Aston martin AMV, SUPER rare VAN, PORCHE GT( 2 ) , FORD GT ( 2 )  M39 Touring, GCLASS Christmas edition, NEW premium car TESLA AND RARE BATTLEPASS LAMBO AVENTADOR
 ● ALL Car unlimited Nos++
 
+
 💵PRICE IDR = 150K
 💵PRICE MY = 53RM
 💵PRICE OVERSEAS = 15$
@@ -163,7 +164,7 @@
 💵PRICE Overseas = 12$
 ──────⊹⊱✫⊰⊹──────
 
-✍️PAKET 5 [ DRIFT TUNES BY OGX STREET ]
+✍️PAKET 5 [ DRIFT TUNES ]
 ●GOLD & DOLLAR UNLIMITED, MAX LEVEL 50
 ●UNLOCK MOUNTAIN HILLS PASS (NEW MAP)
 ● UNLOCK SUNSET CITY CIRCUIT
@@ -178,11 +179,7 @@ PORCHE GT, NEW GCLASS, NEW TESLA AWD & TESLA RWD AND RARE BATTLEPASS LAMBO AVENT
 💵PRICE OVERSEAS = 20$
 ──────⊹⊱✫⊰⊹──────
 
-.COLOR NAME  -20K
-
-.INJECT PREMIUM CARS 1 MOBIL -20K
-
-✅PRICELIST SAFEBAN
+Price Akun Safeban
 
 Safeban Newbie
 Unlock allmap
@@ -199,6 +196,10 @@ Unlock allmap
 40+ Drift tune car (include tesla RWD)
 
 Price : 200k
+
+.COLOR NAME  -20K
+
+.INJECT PREMIUM CARS 1 MOBIL -20K
         </div>
         <div class="p-4 bg-slate-800/30 border-t border-slate-800">
             <button onclick="closeModal('priceModal')" class="w-full bg-slate-800 p-3 rounded-2xl font-black text-[10px] uppercase shadow-lg">Tutup</button>
@@ -246,7 +247,9 @@ Price : 200k
             </div>
             <div class="bg-slate-900/80 p-3 rounded-xl border border-orange-500/20 mb-4 flex justify-between items-center">
                 <span class="text-slate-500 text-[9px] font-black uppercase italic">OMSET KESELURUHAN:</span>
-                <span id="adminGlobalRevenue" class="text-orange-400 font-bold text-xs">Rp 0</span>
+                <div id="adminGlobalRevenue" class="text-right">
+                    <span class="text-orange-400 font-bold text-xs">Rp 0</span>
+                </div>
             </div>
             <button onclick="syncDatabase()" id="btnSync" class="w-full bg-emerald-600 p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg mb-4 active:scale-95">🧹 RAPIHKAN SHEET</button>
             <div class="grid grid-cols-2 gap-2">
@@ -381,10 +384,17 @@ Price : 200k
 
     async function syncDatabase(){ const d=await secureFetch({action:"syncSheet"}); if(d){ alert(d.msg); location.reload(); } }
     async function updateUserStats(){ const d=await secureFetch({action:"getUserStats"}); if(d) document.getElementById('userRevenue').innerText="Rp "+(d.revenue||0).toLocaleString(); }
+    
     async function fetchAdminStats(){
         const data = await secureFetch({action:"getStats"});
         if(data){
-            document.getElementById('adminGlobalRevenue').innerText = "Rp " + (data.revenue || 0).toLocaleString();
+            document.getElementById('adminGlobalRevenue').innerHTML = `
+                <div class="flex flex-col">
+                    <span class="text-orange-400 font-bold text-[11px]">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span>
+                    <span class="text-emerald-400 font-bold text-[11px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span>
+                    <span class="text-slate-400 text-[8px] border-t border-slate-700 mt-1">TOTAL: Rp ${(data.revenue || 0).toLocaleString()}</span>
+                </div>
+            `;
             new Chart(document.getElementById('adminChart'), { type: 'bar', data: { labels: Object.keys(data.chartData), datasets: [{ data: Object.values(data.chartData), backgroundColor: '#3b82f6' }] }, options: { plugins:{legend:{display:false}} } });
         }
     }
@@ -394,4 +404,3 @@ Price : 200k
 </script>
 </body>
 </html>
-
