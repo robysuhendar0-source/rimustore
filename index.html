@@ -6,18 +6,18 @@
     <title>Rimuru Store V5.9 - Tempest Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --rimuru-blue: #7dd3fc;
-            --rimuru-aura: rgba(125, 211, 252, 0.2);
-            --tempest-deep: #0f172a;
-            --great-sage-purple: #818cf8;
+            --rimuru-sky: #7dd3fc;
+            --rimuru-deep: #0ea5e9;
+            --sage-purple: #818cf8;
+            --tempest-bg: #020617;
         }
 
         body { 
             -webkit-user-select: none; 
-            background: radial-gradient(circle at top right, #1e293b, #0f172a, #020617);
+            background: radial-gradient(circle at top right, #0f172a, #020617);
             color: white; 
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
@@ -25,42 +25,33 @@
 
         .hidden { display: none; }
         
-        /* RIMURU SLIME GLOW EFFECT */
         .glass-card { 
             background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(125, 211, 252, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(125, 211, 252, 0.15);
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
         }
 
-        .rimuru-gradient-text {
-            background: linear-gradient(to bottom, #fff, var(--rimuru-blue));
+        .rimuru-gradient {
+            background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* ANIMASI POP UP ALA SKILL GREAT SAGE */
-        .animate-pop { animation: sage-notice 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        @keyframes sage-notice { 
-            from { transform: translateY(20px) scale(0.9); opacity: 0; } 
+        .animate-pop { animation: sage-popup 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes sage-popup { 
+            from { transform: translateY(15px) scale(0.95); opacity: 0; } 
             to { transform: translateY(0) scale(1); opacity: 1; } 
         }
 
-        /* BUTTON STYLE: RIMURU SKILL */
         .btn-rimuru {
             background: linear-gradient(45deg, #0ea5e9, #6366f1);
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.4);
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
-        .btn-rimuru:active { transform: scale(0.95); filter: brightness(1.2); }
+        .btn-rimuru:active { transform: scale(0.96); filter: brightness(1.2); }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* SHIMMER SEPERTI AURA */
-        .shimmer-btn { position: relative; overflow: hidden; }
         .shimmer-btn::after {
             content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
@@ -68,69 +59,228 @@
         }
         @keyframes aura-flow { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
 
-        .status-badge {
-            background: var(--rimuru-aura);
-            border-left: 3px solid var(--rimuru-blue);
-        }
-
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--rimuru-sky); border-radius: 10px; }
+        .modal-overlay { background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px); }
+        
         input, select {
-            background: rgba(2, 6, 23, 0.8) !important;
+            background: rgba(15, 23, 42, 0.8) !important;
             border: 1px solid rgba(125, 211, 252, 0.2) !important;
-            transition: all 0.3s;
         }
-        input:focus { border-color: var(--rimuru-blue) !important; box-shadow: 0 0 10px var(--rimuru-aura); }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 10px; }
+        input:focus { border-color: var(--rimuru-sky) !important; outline: none; box-shadow: 0 0 15px rgba(125, 211, 252, 0.1); }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
 <div id="resultModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
-    <div class="glass-card w-full max-w-sm rounded-[2rem] overflow-hidden flex flex-col animate-pop border-2 border-sky-400">
+    <div class="glass-card w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop border-2 border-sky-400/50">
         <div class="p-6 bg-sky-500/20 border-b border-sky-400/20 text-center">
-            <h2 class="text-sky-300 font-black tracking-[0.2em] uppercase italic text-sm">💠 SUCCESS EVOLUTION 💠</h2>
+            <h2 class="text-sky-300 font-black tracking-widest uppercase italic text-sm">💠 MANIFESTATION COMPLETE 💠</h2>
         </div>
         <div class="p-8 text-center">
-            <p id="resPaket" class="text-[10px] text-sky-400 font-bold uppercase mb-2 tracking-widest"></p>
-            <div class="bg-slate-950/80 p-5 rounded-2xl border border-sky-900/50 mb-6 group">
-                <p id="resAccount" class="text-white font-mono text-sm break-all font-bold group-hover:text-sky-300 transition-colors"></p>
+            <p id="resPaket" class="text-[10px] text-sky-400 font-bold uppercase mb-2 tracking-[0.2em]"></p>
+            <div class="bg-slate-950/80 p-5 rounded-2xl border border-sky-900/50 mb-6">
+                <p id="resAccount" class="text-white font-mono text-sm break-all font-bold"></p>
             </div>
             <button onclick="copyAccountResult()" class="w-full btn-rimuru p-4 rounded-2xl font-black text-xs uppercase shadow-lg mb-3">Salin Skill Akun</button>
-            <button onclick="closeModal('resultModal'); location.reload();" class="w-full btn-secondary p-4 rounded-2xl font-black text-xs uppercase text-slate-400">Kembali ke Federasi</button>
+            <button onclick="closeModal('resultModal'); location.reload();" class="w-full bg-slate-800/50 p-4 rounded-2xl font-black text-xs uppercase text-slate-400 border border-white/5">Kembali</button>
         </div>
+    </div>
+</div>
+
+<div id="userPassModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+    <div class="glass-card w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop border border-indigo-500/30">
+        <div class="p-6 bg-indigo-600/20 border-b border-indigo-500/20 text-center">
+            <h2 class="text-indigo-400 font-black tracking-widest uppercase text-sm italic">🔐 UPDATE MAGIC KEY</h2>
+        </div>
+        <div class="p-6 space-y-4">
+            <input type="password" id="u_newpass" placeholder="Password Baru" class="w-full p-4 rounded-2xl text-white outline-none text-center text-sm font-bold">
+            <button onclick="submitUserPass(event)" id="btnUserPass" class="w-full btn-rimuru p-4 rounded-2xl font-black text-xs uppercase shadow-lg">Confirm Evolution</button>
+            <button onclick="closeModal('userPassModal')" class="w-full bg-slate-800/50 p-3 rounded-2xl font-black text-[10px] uppercase text-slate-400">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="resellerModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
+    <div class="glass-card w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop border border-sky-500/40 shadow-2xl">
+        <div class="p-6 bg-sky-600/20 border-b border-sky-500/20 text-center">
+            <h2 class="text-sky-300 font-black tracking-widest uppercase italic text-sm">💰 MARKET PRICE</h2>
+        </div>
+        <div class="p-6 overflow-y-auto max-h-[60vh] text-xs space-y-4">
+            <p class="text-[9px] text-sky-400/60 font-bold uppercase tracking-tighter text-center italic">"Suggested pricing for Tempest Citizens"</p>
+            <div class="grid grid-cols-2 gap-4 text-left px-2 bg-slate-950/50 p-4 rounded-2xl">
+                <div class="text-slate-400 leading-relaxed">Paket 10k<br>Paket Hemat<br>Paket 1<br>Paket 2<br>Paket 3<br>Paket 4<br>Paket 5</div>
+                <div class="text-sky-400 font-black leading-relaxed">💸 5k<br>💸 10k<br>💸 15k<br>💸 30k<br>💸 75k<br>💸 75k<br>💸 100k</div>
+            </div>
+            <div class="border-t border-white/5 pt-4 grid grid-cols-2 gap-4 text-left px-2">
+                <div class="text-slate-400">Safeban Newbie<br>Safeban Pro</div>
+                <div class="text-orange-400 font-black">💸 50k<br>💸 100k</div>
+            </div>
+        </div>
+        <div class="p-4"><button onclick="closeModal('resellerModal')" class="w-full btn-rimuru p-4 rounded-2xl font-black text-xs uppercase">Tutup</button></div>
+    </div>
+</div>
+
+<div id="updateModal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
+    <div class="glass-card w-full max-w-sm rounded-[2.5rem] overflow-hidden flex flex-col animate-pop border border-white/10">
+        <div class="p-6 bg-slate-800/50 border-b border-white/10 text-center">
+            <h2 class="text-slate-300 font-black tracking-widest uppercase text-sm italic">📢 SKILL UPDATE LOG</h2>
+        </div> 
+        <div class="p-6 overflow-y-auto max-h-[60vh] text-[11px] space-y-3">
+            <div class="bg-sky-500/5 p-3 rounded-2xl border border-sky-500/10">
+                <p class="text-sky-400 font-bold mb-1">✅ V8.8: Auto Monthly Report</p>
+                <p class="text-slate-400">Pembersihan database otomatis & laporan Telegram.</p>
+            </div>
+            <div class="bg-indigo-500/5 p-3 rounded-2xl border border-indigo-500/10">
+                <p class="text-indigo-400 font-bold mb-1">🚀 V8.6: Admin Revenue</p>
+                <p class="text-slate-400">Pemisahan profit Admin dan Seller secara real-time.</p>
+            </div>
+            <div class="bg-indigo-500/5 p-3 rounded-2xl border border-indigo-500/10">
+                <p class="text-indigo-400 font-bold mb-1">🔐 V8.5: Security Patch</p>
+                <p class="text-slate-400">Session management & proteksi relog 2 jam.</p>
+            </div>
+        </div>
+        <div class="p-4"><button onclick="closeModal('updateModal')" class="w-full btn-rimuru p-4 rounded-2xl font-black text-xs uppercase shadow-lg">Understood</button></div>
     </div>
 </div>
 
 <div id="priceModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay">
-    <div class="glass-card w-full max-w-md max-h-[85vh] rounded-[2rem] overflow-hidden flex flex-col animate-pop border border-sky-500/30 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-        <div class="p-6 border-b border-sky-500/20 flex justify-between items-center bg-sky-500/10">
+    <div class="glass-card w-full max-w-md max-h-[85vh] rounded-[2.5rem] overflow-hidden flex flex-col animate-pop border border-sky-500/30">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-sky-500/10">
             <h2 class="text-sky-300 font-black tracking-widest text-sm uppercase italic">📜 SCROLL OF TEMPEST</h2>
-            <button onclick="closeModal('priceModal')" class="text-sky-400 font-bold text-2xl">&times;</button>
+            <button onclick="closeModal('priceModal')" class="text-slate-500 font-bold text-2xl hover:text-white transition-colors">&times;</button>
         </div>
-        <div class="p-6 overflow-y-auto text-[11px] space-y-4 whitespace-pre-wrap custom-scrollbar text-slate-300 leading-relaxed">
-            [Konten Harga Rimuru Store]
+        <div class="p-6 overflow-y-auto text-[10px] space-y-4 whitespace-pre-wrap text-slate-300 font-medium leading-relaxed">
+●GOLD & MONEY 999M
+●LEVEL MAX
+──────⊹⊱✫⊰⊹──────
+✍️PAKET HEMAT UNLOCK MOUNTAIN MAP 
+●1B GOLD & 2B DOLLAR UNLIMITED , MAX LEVEL 50
+●UNLOCK 2 MOUNTAIN MAP
+💵PRICE IDR = 20K
+💵PRICE MY = 6RM
+💵PRICE OVERSEAS = 2$
+──────⊹⊱✫⊰⊹──────
+
+✍️PAKET 1 [NEWBIE]
+●GOLD & DOLLAR UNLIMITED , MAX LEVEL 50
+●Premium Car S80 Royal Lynx & M36 + elite Apartement
+●GET BONUS CAR FF4 Technoir & LMD lamborghini Diablo Midnight Phoenix , BX5 , Aston martin AMV & Lexus LFA
+● UNLOCK 2 MOUNTAIN MAP
+● UNLOCK SUNSET CITY CIRCUIT
+
+💵PRICE IDR = 30K
+💵PRICE MY = 9RM
+💵PRICE OVERSEAS = 4$
+──────⊹⊱✫⊰⊹──────
+
+✍️PAKET 2 [ELITE NEWBIE]
+●GOLD & DOLLAR UNLIMITED , MAX LEVEL 50
+●GET BONUS CAR FF4 Technoir, LMD lamborghini Diablo Midnight Phoenix, BX5 Hill Runner, AR8 Fiery Blast, ELITE GT aston martin, ROCKET STAR Lexus LFL  and NEW FORD GT AND PORCHE GT
+● UNLOCK MOUNTAIN MAP
+● UNLOCK SUNSET CITY CIRCUIT
+
+💵PRICE IDR = 60K
+💵PRICE MY = 18RM
+💵PRICE OVERSEAS = 7$
+──────⊹⊱✫⊰⊹──────
+
+✍️PAKET 3 [ALL PREMIUM CAR]
+●GOLD & DOLLAR UNLIMITED, MAX LEVEL 50
+●UNLOCK MOUNTAIN HILLS PASS (NEW MAP)
+●UNLOCK SUNSET CITY CIRCUIT
+●35 MOBIL/CAR PREMIUM (Include 4 Elite Apartement)
+● UNLOCK NEW PREMIUM CAR Lexus LFA & Aston martin AMV, SUPER rare VAN, PORCHE GT( 2 ) , FORD GT ( 2 )  M39 Touring, GCLASS Christmas edition, NEW premium car TESLA AND RARE BATTLEPASS LAMBO AVENTADOR
+● ALL Car unlimited Nos++
+
+
+💵PRICE IDR = 150K
+💵PRICE MY = 53RM
+💵PRICE OVERSEAS = 15$
+──────⊹⊱✫⊰⊹──────
+
+✍️PAKET 4 [500KMH KMH]
+●GOLD & DOLLAR UNLIMITED, MAX LEVEL 50
+●UNLOCK MOUNTAIN HILLS PASS (NEW MAP)
+● UNLOCK SUNSET CITY CIRCUIT
+●UNLIMITED NOS CARS IN GARAGE (45 CAR)
+●INJECT 500++ KM/H CARS IN GARAGE (45 CAR)
+●UNLOCK 4 RARE PREMIUM CAR LMD,FF4, BX5, AR8) Include 4 Elite House.
+● UNLOCK NEW PREMIUM CAR Lexus LFA & Aston martin AMV, VIPER, VAN, M39TOURING, PORCHE GT, FORD GT, GWAGON, TESLA, AND RARE BATTLEPASS LAMBO AVENTADOR
+●BONUS WHEELIE SUPRA S80, NEW GCLASS & NEW TESLA
+
+💵PRICE IDR = 150K
+💵PRICE MY = 45RM
+💵PRICE Overseas = 12$
+──────⊹⊱✫⊰⊹──────
+
+✍️PAKET 5 [ DRIFT TUNES ]
+●GOLD & DOLLAR UNLIMITED, MAX LEVEL 50
+●UNLOCK MOUNTAIN HILLS PASS (NEW MAP)
+● UNLOCK SUNSET CITY CIRCUIT
+●DRIFT TUNES RWD (44 CAR)
+●UNLOCK 4 RARE PREMIUM CARS  (Include 4 Elite House) LMD, FF4, BX5, AR8 & VAN
+●UNLOCK SPECIAL CHRISMAST EVENT M92C BMW E92 CABRIO SUPER RARE
+● UNLOCK NEW PREMIUM CAR Lexus LFA, Aston martin & VIPER, M39 TOURING,
+PORCHE GT, NEW GCLASS, NEW TESLA AWD & TESLA RWD AND RARE BATTLEPASS LAMBO AVENTADOR
+
+💵PRICE IDR = 200K
+💵PRICE MY = 60RM
+💵PRICE OVERSEAS = 20$
+──────⊹⊱✫⊰⊹──────
+
+
+Ready mod Safeban
+
+Safeban Newbie
+Unlock allmap
+Max level
+Silver 21M
+Gold 10.000
+50 mobil premium (Showroom tune)
+
+Price : 100k
+
+Safeban Pro
+Gold & Silver 888M
+Unlock allmap
+40+ Drift tune car (include tesla RWD)
+
+Price : 200k
+
+
+.COLOR NAME  -20K
+
+.INJECT PREMIUM CARS 1 MOBIL -20K
+
+GARANSI
+P2 2minggu 1x claim
+p3 1bulan 1x claim
+p4 1bulan 1x claim
+p5 2bulan 3x claim
+p6 3bulan 3x claim
         </div>
-        <div class="p-4 bg-slate-900/50 border-t border-sky-500/20 text-center">
-            <button onclick="closeModal('priceModal')" class="px-8 py-3 btn-secondary rounded-xl font-bold text-[10px] uppercase text-sky-400">Tutup Scroll</button>
+        <div class="p-4 bg-slate-900/50 border-t border-white/5">
+            <button onclick="closeModal('priceModal')" class="w-full bg-slate-800 p-3 rounded-2xl font-black text-[10px] uppercase text-sky-400">Close Scroll</button>
         </div>
     </div>
 </div>
 
-<div id="loginSection" class="flex h-screen items-center justify-center p-6">
-    <div class="glass-card p-10 rounded-[2.5rem] w-full max-w-sm shadow-2xl border border-sky-400/20 relative overflow-hidden">
-        <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/20 rounded-full blur-3xl"></div>
-        <div class="relative z-10 text-center">
-            <div class="mb-2 inline-block p-4 rounded-full bg-sky-500/10 border border-sky-400/20 mb-4 shadow-inner">
-                <span class="text-4xl">💧</span>
+<div id="loginSection" class="flex h-screen items-center justify-center p-6 bg-slate-950">
+    <div class="glass-card p-10 rounded-[3rem] w-full max-w-sm shadow-2xl border border-sky-500/20 relative overflow-hidden">
+        <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl"></div>
+        <div class="relative z-10">
+            <div class="text-center mb-10">
+                <div class="inline-block p-4 rounded-3xl bg-sky-500/10 mb-4 border border-sky-500/20 shadow-inner">
+                    <span class="text-4xl">💧</span>
+                </div>
+                <h2 class="text-4xl font-black italic tracking-tighter rimuru-gradient">RIMURU</h2>
+                <p class="text-[9px] text-sky-400/60 font-bold uppercase tracking-[0.4em] mt-1">Tempest Federation</p>
             </div>
-            <h2 class="text-4xl font-black mb-2 rimuru-gradient-text italic tracking-tighter">RIMURU</h2>
-            <p class="text-[10px] text-sky-400/60 font-bold uppercase tracking-[0.3em] mb-8">Tempest Federation</p>
-            
             <div class="space-y-4">
-                <input type="text" id="user" placeholder="Nama Monster" class="w-full p-4 bg-slate-900 rounded-2xl border border-sky-900/30 outline-none text-white text-center font-bold">
-                <input type="password" id="pass" placeholder="Sandi Rahasia" class="w-full p-4 bg-slate-900 rounded-2xl border border-sky-900/30 outline-none text-white text-center font-bold">
-                <button onclick="handleLogin()" id="btnLogin" class="w-full btn-rimuru p-4 rounded-2xl font-black uppercase text-sm shadow-lg active:scale-95 transition-all shimmer-btn">Identity Manifest</button>
+                <input type="text" id="user" placeholder="Nama Citizens" class="w-full p-4 bg-slate-900/50 rounded-2xl text-white text-center font-bold">
+                <input type="password" id="pass" placeholder="Magic Password" class="w-full p-4 bg-slate-900/50 rounded-2xl text-white text-center font-bold">
+                <button onclick="handleLogin()" id="btnLogin" class="w-full btn-rimuru p-4 rounded-2xl font-black uppercase shadow-lg shimmer-btn tracking-widest text-sm">LOGIN</button>
             </div>
         </div>
     </div>
@@ -139,97 +289,244 @@
 <div id="appSection" class="hidden p-4 max-w-md mx-auto pb-12">
     <div class="flex justify-between items-end mb-8 mt-6">
         <div>
-            <p class="text-[10px] text-sky-400 font-black tracking-[0.2em] mb-1">MONSTER FEDERATION</p>
-            <h1 class="text-2xl font-black text-white italic tracking-tighter">RIMURU<span class="text-sky-400"> STORE</span></h1>
-            <div id="userStatusTag" class="mt-2 text-[9px] py-1 px-3 status-badge text-sky-300 font-bold uppercase italic inline-block"></div>
+            <h1 class="text-2xl font-black italic tracking-tighter">RIMURU<span class="text-sky-400"> STORE</span></h1>
+            <p id="userStatusTag" class="text-[8px] py-1 px-3 bg-sky-500/10 text-sky-400 font-black mt-2 tracking-widest uppercase italic border-l-2 border-sky-500 inline-block rounded-r-lg"></p>
         </div>
-        <button onclick="handleLogout()" class="p-3 bg-red-500/10 text-red-400 rounded-2xl border border-red-500/20 text-[10px] font-black hover:bg-red-500 hover:text-white transition-all">EXIT</button>
+        <div class="flex gap-2">
+            <button onclick="openModal('userPassModal')" class="bg-white/5 p-3 rounded-2xl border border-white/5 text-sky-400">⚙️</button>
+            <button onclick="handleLogout()" class="bg-red-500/10 text-red-400 px-4 py-2 rounded-2xl text-[10px] font-black border border-red-500/20">EXIT</button>
+        </div>
     </div>
 
-    <div class="glass-card p-5 rounded-3xl mb-6 flex justify-between items-center shadow-inner relative overflow-hidden">
-        <div class="absolute right-0 top-0 opacity-10 pointer-events-none">
-            <span class="text-6xl">💎</span>
+    <div class="glass-card p-6 rounded-[2.5rem] mb-6 flex justify-between items-center relative overflow-hidden">
+        <div class="absolute right-0 top-0 opacity-10 pointer-events-none translate-x-4 -translate-y-4">
+            <span class="text-8xl">💎</span>
         </div>
         <div class="relative z-10">
-            <span class="text-slate-400 text-[9px] font-bold uppercase tracking-widest block mb-1 italic text-sky-400/60">MANA COLLECTED:</span>
-            <span id="userRevenue" class="text-2xl font-black text-white tracking-tight">Rp 0</span>
+            <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest italic block mb-1">MANA COLLECTED</span>
+            <span id="userRevenue" class="text-3xl font-black text-white tracking-tight">Rp 0</span>
         </div>
-        <button onclick="openModal('userPassModal')" class="bg-sky-400/10 p-3 rounded-xl border border-sky-400/20">
-            <span class="text-lg">⚙️</span>
-        </button>
     </div>
 
     <div class="grid grid-cols-2 gap-3 mb-3">
-        <button onclick="openModal('priceModal')" class="glass-card p-4 rounded-2xl text-sky-300 font-black text-[10px] tracking-widest shadow-lg border-b-2 border-sky-500/40 uppercase">📜 Price List</button>
-        <button onclick="openModal('updateModal')" class="glass-card p-4 rounded-2xl text-slate-400 font-black text-[10px] tracking-widest shadow-lg italic uppercase">📢 Skill Logs</button>
+        <button onclick="openModal('priceModal')" class="glass-card p-4 rounded-2xl text-sky-300 font-black text-[10px] tracking-widest shadow-lg border-b-2 border-sky-500/40 uppercase">📜 Price</button>
+        <button onclick="openModal('updateModal')" class="glass-card p-4 rounded-2xl text-slate-400 font-black text-[10px] tracking-widest shadow-lg italic uppercase border-b-2 border-white/10">📢 Logs</button>
     </div>
-    <button onclick="openModal('resellerModal')" class="w-full glass-card p-4 rounded-2xl text-indigo-300 font-black text-[10px] tracking-[0.4em] mb-8 shadow-lg uppercase border-t border-white/5">💰 User Pricing</button>
+    <button onclick="openModal('resellerModal')" class="w-full glass-card p-4 rounded-2xl text-indigo-300 font-black text-[10px] tracking-[0.4em] mb-8 shadow-lg uppercase border-t border-white/10">💰 Price Citizens</button>
 
-    <div id="adminPanel" class="hidden mb-8 space-y-3">
-        <div class="p-6 bg-indigo-600/10 border-2 border-indigo-500/30 rounded-[2.5rem] relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-20"><span class="text-3xl">🔱</span></div>
-            <h3 class="text-indigo-400 font-black text-[11px] uppercase mb-5 tracking-[0.2em] text-center italic">Authority: GREAT SAGE</h3>
+    <div id="adminPanel" class="hidden mb-8 space-y-4">
+        <div class="p-6 bg-indigo-600/10 border-2 border-indigo-500/30 rounded-[3rem] relative overflow-hidden">
+            <h3 class="text-indigo-400 font-black text-[11px] uppercase mb-6 tracking-[0.3em] text-center italic">Authority: GREAT SAGE</h3>
             
-            <div class="bg-slate-950/80 p-4 rounded-2xl border border-indigo-500/20 mb-4">
-                <canvas id="adminChart" class="w-full h-32"></canvas>
+            <div class="bg-slate-950/80 p-4 rounded-3xl border border-indigo-500/20 mb-4">
+                <canvas id="adminChart" class="w-full h-36"></canvas>
             </div>
             
-            <div class="flex justify-between items-center bg-slate-950 p-4 rounded-2xl mb-4 border-l-4 border-indigo-500">
-                <span class="text-slate-400 text-[9px] font-black uppercase italic">GLOBAL OMSET:</span>
-                <div id="adminGlobalRevenue" class="text-right font-black text-indigo-400 text-sm">Rp 0</div>
+            <div class="bg-slate-950 p-5 rounded-3xl border border-white/5 mb-6 flex justify-between items-center shadow-inner">
+                <span class="text-slate-400 text-[9px] font-black uppercase italic tracking-widest">Global Omset</span>
+                <div id="adminGlobalRevenue" class="text-right"></div>
             </div>
 
-            <button onclick="syncDatabase()" id="btnSync" class="w-full btn-rimuru p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg mb-4 shimmer-btn tracking-widest">🧹 Harmonize Database</button>
+            <button onclick="syncDatabase()" id="btnSync" class="w-full btn-rimuru p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg mb-6 shimmer-btn tracking-widest">🧹 Harmonize Database</button>
             
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="showAdminFeature('addUser')" class="bg-slate-900/50 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-white/5 hover:bg-indigo-500/20 transition-colors uppercase">+ New Monster</button>
-                <button onclick="showAdminFeature('addStock')" class="bg-slate-900/50 p-3 rounded-xl text-[9px] font-bold text-slate-300 border border-white/5 hover:bg-indigo-500/20 transition-colors uppercase">+ Stock Skill</button>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="showAdminFeature('addUser')" class="bg-slate-900/80 p-4 rounded-2xl text-[9px] font-bold text-slate-300 border border-white/5">+ New Monster</button>
+                <button onclick="showAdminFeature('addStock')" class="bg-slate-900/80 p-4 rounded-2xl text-[9px] font-bold text-slate-300 border border-white/5">+ Stock Skill</button>
+                <button onclick="showAdminFeature('deleteUser')" class="bg-slate-900/80 p-4 rounded-2xl text-[9px] font-bold text-red-400 border border-red-500/20">Hapus User</button>
+                <button onclick="showAdminFeature('changePass')" class="bg-slate-900/80 p-4 rounded-2xl text-[9px] font-bold text-slate-300 border border-white/5">Adm Pass</button>
             </div>
-            <div id="adminForm" class="hidden mt-4 pt-4 border-t border-indigo-500/20 space-y-3">
+            
+            <div id="adminForm" class="hidden mt-6 pt-6 border-t border-indigo-500/20 space-y-4">
                 <div id="formContent"></div>
-                <button id="btnAdminSubmit" onclick="submitAdminAction()" class="w-full bg-white text-indigo-900 p-3 rounded-xl font-black text-[10px] uppercase shadow-xl">Execute Command</button>
+                <button id="btnAdminSubmit" onclick="submitAdminAction()" class="w-full bg-indigo-500 p-4 rounded-2xl font-black text-[11px] uppercase shadow-xl hover:bg-indigo-400 transition-colors">Execute Command</button>
             </div>
         </div>
     </div>
 
-    <div class="glass-card p-8 rounded-[2.5rem] mb-8 shadow-2xl relative border-t border-white/10">
-        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-sky-500 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-indigo-950">MANIFESTATION</div>
+    <div class="glass-card p-8 rounded-[3rem] mb-8 shadow-2xl relative border-t border-white/10">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-500 px-6 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-slate-950">Manifestation</div>
         
-        <div class="mb-5">
-            <label class="text-[10px] text-sky-400/60 font-black mb-2 block uppercase tracking-widest italic">Select Skill Tier:</label>
-            <select id="paket" class="w-full p-4 bg-slate-950 rounded-2xl border-none text-sm text-white font-bold outline-none ring-1 ring-sky-500/20 focus:ring-sky-500"></select>
+        <label class="text-[10px] text-sky-400/60 font-black mb-2 block uppercase tracking-widest italic">Choose Skill Tier:</label>
+        <select id="paket" class="w-full p-5 mb-5 rounded-2xl text-sm text-white font-bold outline-none ring-1 ring-sky-500/20 focus:ring-sky-500 transition-all"></select>
+        
+        <label class="text-[10px] text-sky-400/60 font-black mb-2 block uppercase tracking-widest italic">Energy Offering (Proof):</label>
+        <div class="relative mb-8">
+            <input type="file" id="bukti" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-6 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-sky-500/10 file:text-sky-400">
         </div>
-
-        <div class="mb-8">
-            <label class="text-[10px] text-sky-400/60 font-black mb-2 block uppercase tracking-widest italic">Energy Receipt (Transfer):</label>
-            <div class="relative">
-                <input type="file" id="bukti" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-[10px] file:font-black file:bg-sky-500/10 file:text-sky-400">
-            </div>
-        </div>
-
-        <button id="btnGen" disabled onclick="handleGen()" class="w-full btn-rimuru p-5 rounded-3xl font-black uppercase text-sm shadow-[0_10px_20px_rgba(14,165,233,0.3)] active:scale-95 transition-all shimmer-btn">GENERATE SKILL</button>
+        
+        <button id="btnGen" disabled onclick="handleGen()" class="w-full btn-rimuru p-5 rounded-3xl font-black uppercase text-sm shadow-[0_10px_30px_-10px_#0ea5e9] shimmer-btn tracking-widest">GENERATE SKILL</button>
     </div>
 
-    <div class="glass-card p-6 rounded-[2.5rem] shadow-lg border-b border-white/5">
+    <div class="glass-card p-8 rounded-[3rem] mb-6 shadow-lg border-b border-white/5">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] italic">Evolution Logs</h3>
-            <span class="h-2 w-2 rounded-full bg-sky-500 shadow-[0_0_10px_#0ea5e9] animate-pulse"></span>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest italic">Evolution Logs</h3>
+            <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse shadow-[0_0_10px_#0ea5e9]"></span>
         </div>
-        <div id="historyList" class="space-y-4 max-h-96 overflow-y-auto custom-scrollbar pr-2 text-center">
-            </div>
+        <div id="historyList" class="space-y-4 max-h-[450px] overflow-y-auto pr-2"></div>
     </div>
 </div>
 
 <script>
-    // SEMUA LOGIC JAVASCRIPT TETAP SAMA SEPERTI VERSI SEBELUMNYA (V5.8/5.9)
-    // SAYA HANYA MENGUBAH TAMPILAN VISUALNYA SAJA SESUAI TEMA TENSURA
-    
-    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzRwk8CtNXjuwGRVoxsA88KxNAzy-29BSovXFweLh-MChRkeFXOheJgVHyhuF-VaOE/exec"; 
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxJlmgzKY_ED9YoDmGc3PdCmJRKH3ZF9FVN6oYChS2X243rRf55WiU5rNs4C1Wn_tylpg/exec"; 
     const PAKET_LIST = ["Paket 10k", "Paket Hemat", "Paket 1", "Paket 2", "Paket 3", "Paket 4", "Paket 5", "Paket 6", "Safeban Newbie", "Safeban Pro"];
     let base64Img = "", currentUser = "", currentRole = "", sessionToken = "", currentAdminAction = "";
 
-    // ... (Script logika dari kode sebelumnya dilanjutkan di sini secara verbatim)
-    // Sesuai instruksi, semua script fungsional dipertahankan tanpa perubahan karakter satu pun.
+    async function secureFetch(payload) {
+        if(sessionToken) payload.token = sessionToken;
+        try {
+            const res = await fetch(WEBAPP_URL, { method: "POST", body: JSON.stringify(payload) });
+            const data = await res.json();
+            if(data && data.status === "invalid_session"){ 
+                alert("Session Expired (2 Jam)! Silakan Relog.");
+                localStorage.clear(); location.reload(); return null; 
+            }
+            return data;
+        } catch(e) { console.error(e); return null; }
+    }
+
+    window.onload = function() {
+        const savedToken = localStorage.getItem("rimuru_token"), savedUser = localStorage.getItem("rimuru_user"), savedRole = localStorage.getItem("rimuru_role");
+        if(savedToken && savedUser && savedRole){ 
+            sessionToken = savedToken; currentUser = savedUser; currentRole = savedRole; 
+            showApp(savedRole); 
+        }
+    };
+
+    function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+    function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
+
+    async function handleLogin(){
+        const user = document.getElementById('user').value, pass = document.getElementById('pass').value, btn = document.getElementById('btnLogin');
+        if(!user || !pass) return alert("Isi Data!");
+        btn.innerText = "AUTHENTICATING..."; btn.disabled = true;
+        try {
+            const data = await secureFetch({action:"login", user, pass});
+            if(data && data.status === "success"){
+                sessionToken = data.token; currentUser = user; currentRole = data.role;
+                localStorage.setItem("rimuru_token", sessionToken); localStorage.setItem("rimuru_user", user); localStorage.setItem("rimuru_role", data.role);
+                showApp(data.role);
+            } else { alert(data?data.msg:"Login Gagal!"); btn.innerText = "LOGIN"; btn.disabled = false; }
+        } catch(e) { alert("Server Error!"); btn.innerText = "LOGIN"; btn.disabled = false; }
+    }
+
+    async function showApp(role){
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('appSection').classList.remove('hidden');
+        document.getElementById('userStatusTag').innerText = "Monster Class : " + currentUser;
+        updateStockUI(); loadHistory(); updateUserStats();
+        if(role === "admin"){ 
+            document.getElementById('adminPanel').classList.remove('hidden'); 
+            document.getElementById('btnGen').disabled = false; 
+            fetchAdminStats(); 
+        }
+    }
+
+    async function handleGen(){
+        if(!base64Img) return alert("Upload Bukti Pembayaran!");
+        const btn = document.getElementById('btnGen'); btn.innerText="MANIFESTING..."; btn.disabled=true;
+        const data = await secureFetch({ action:"generate", paket: document.getElementById('paket').value, image: base64Img });
+        if(data && data.status === "success"){
+            document.getElementById('resPaket').innerText=data.paket;
+            document.getElementById('resAccount').innerText=data.email+" | "+data.pass;
+            openModal('resultModal');
+        } else { alert(data?data.msg:"Stok Terkuras!"); btn.innerText="GENERATE SKILL"; btn.disabled=false; }
+    }
+
+    async function submitUserPass(e){
+        e.preventDefault();
+        const newPass = document.getElementById('u_newpass').value;
+        if(!newPass) return alert("Isi password baru!");
+        const btn = document.getElementById('btnUserPass'); btn.innerText="EVOLVING..."; btn.disabled=true;
+        const data = await secureFetch({action:"changePass", newPass: newPass});
+        if(data){ alert(data.msg); closeModal('userPassModal'); }
+        btn.innerText="Confirm Evolution"; btn.disabled=false;
+    }
+
+    function showAdminFeature(type){
+        currentAdminAction = type;
+        const form = document.getElementById('adminForm'), content = document.getElementById('formContent');
+        form.classList.remove('hidden');
+        if(type === "addUser") content.innerHTML = `<input id="adm_user" placeholder="Nama Monster Baru" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs mb-2 border border-white/5"><input id="adm_pass" type="password" placeholder="Magic Password" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs border border-white/5">`;
+        else if(type === "addStock") content.innerHTML = `<select id="adm_paket" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs mb-2 border border-white/5">${PAKET_LIST.map(p=>`<option value="${p}">${p}</option>`).join('')}</select><textarea id="adm_data" placeholder="email|password (1 baris 1 akun)" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs h-32 border border-white/5"></textarea>`;
+        else if(type === "changePass") content.innerHTML = `<input id="adm_newpass" type="password" placeholder="Admin Magic Key" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs border border-white/5">`;
+        else if(type === "deleteUser") content.innerHTML = `<input id="adm_del_user" placeholder="Target User (Ex: Gabiru)" class="w-full p-4 bg-slate-950 rounded-2xl text-white text-xs italic border border-white/5">`;
+    }
+
+    async function submitAdminAction(){
+        const btn=document.getElementById('btnAdminSubmit'); btn.innerText="EXECUTING..."; btn.disabled=true;
+        let payload={action:currentAdminAction};
+        if(currentAdminAction==="addUser"){ payload.newUser=document.getElementById('adm_user').value; payload.newPass=document.getElementById('adm_pass').value; }
+        else if(currentAdminAction==="addStock"){ payload.paket=document.getElementById('adm_paket').value; payload.dataAkun=document.getElementById('adm_data').value; }
+        else if(currentAdminAction==="changePass"){ payload.newPass=document.getElementById('adm_newpass').value; }
+        else if(currentAdminAction==="deleteUser"){ payload.targetUser=document.getElementById('adm_del_user').value; if(!confirm("Banished user?")) { btn.innerText="Execute Command"; btn.disabled=false; return; } }
+        const data=await secureFetch(payload);
+        if(data){ alert(data.msg); location.reload(); }
+        btn.innerText="Execute Command"; btn.disabled=false;
+    }
+
+    async function loadHistory(){
+        const data=await secureFetch({action:"getHistory"});
+        if(data && data.data){
+            document.getElementById('historyList').innerHTML=data.data.map(h=>{
+                const acc = h.email + " | " + h.pass;
+                return `<div class="bg-slate-900/40 p-5 rounded-3xl border-l-4 ${h.isLast?'border-sky-400 shadow-[0_0_15px_rgba(14,165,233,0.15)]':'border-slate-800'} mb-3">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[9px] font-black uppercase ${h.isLast?'text-sky-300':'text-slate-500'} tracking-widest">${h.paket}</span>
+                        <span class="text-[8px] text-slate-500 font-bold italic">${h.time}</span>
+                    </div>
+                    <p class="text-xs font-mono text-white/90 mb-3 break-all font-bold">${acc}</p>
+                    <button onclick="copyToClipboard('${acc}')" class="text-[8px] bg-sky-500/10 text-sky-400 px-4 py-2 rounded-xl border border-sky-500/20 uppercase font-black active:scale-90 transition-all">Copy Skill</button>
+                </div>`;
+            }).join('');
+        }
+    }
+
+    function copyToClipboard(text){ navigator.clipboard.writeText(text); alert("Skill Copied to Scroll!"); }
+    function copyAccountResult(){ copyToClipboard(document.getElementById('resAccount').innerText); }
+    
+    async function updateStockUI(){
+        const data=await secureFetch({action:"getStockDetail"});
+        if(data && data.stockMap) document.getElementById('paket').innerHTML=PAKET_LIST.map(p=>{
+            const s=data.stockMap[p]||0;
+            return `<option value="${p}" ${s===0?'disabled':''}>${p} (${s} ${s<3&&s>0?'🔥':'Ready'})</option>`;
+        }).join('');
+    }
+
+    async function syncDatabase(){ 
+        const btn = document.getElementById('btnSync'); btn.innerText = "HARMONIZING..."; btn.disabled = true;
+        const data = await secureFetch({action:"syncSheet"}); 
+        if(data){ alert(data.msg); location.reload(); } 
+        btn.innerText = "Harmonize Database"; btn.disabled = false;
+    }
+
+    async function updateUserStats(){ const d=await secureFetch({action:"getUserStats"}); if(d) document.getElementById('userRevenue').innerText="Rp "+(d.revenue||0).toLocaleString(); }
+    
+    async function fetchAdminStats(){
+        const data = await secureFetch({action:"getStats"});
+        if(data){
+            document.getElementById('adminGlobalRevenue').innerHTML = `
+                <div class="flex flex-col gap-1">
+                    <span class="text-indigo-400 font-black text-sm">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span>
+                    <span class="text-sky-400 font-bold text-[10px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span>
+                    <span class="text-slate-500 text-[8px] border-t border-white/5 mt-1 pt-1 tracking-widest uppercase italic">Total: Rp ${(data.revenue || 0).toLocaleString()}</span>
+                </div>`;
+            if(data.chartData) {
+                new Chart(document.getElementById('adminChart'), { 
+                    type: 'bar', 
+                    data: { labels: Object.keys(data.chartData), datasets: [{ data: Object.values(data.chartData), backgroundColor: '#0ea5e9', borderRadius: 10 }] }, 
+                    options: { plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true, grid:{display:false}, ticks:{display:false}}, x:{grid:{display:false}, ticks:{color:'#64748b', font:{size:8, family:'Plus Jakarta Sans'}}} } } 
+                });
+            }
+        }
+    }
+
+    function handleLogout(){ if(confirm("Log out from Tempest Federation?")){ localStorage.clear(); location.reload(); } }
+    document.getElementById('bukti').onchange=(e)=>{ 
+        if(!e.target.files[0]) return;
+        const r=new FileReader(); 
+        r.onload=()=>{ base64Img=r.result; document.getElementById('btnGen').disabled=false; }; 
+        r.readAsDataURL(e.target.files[0]); 
+    };
 </script>
 </body>
 </html>
