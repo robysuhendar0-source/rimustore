@@ -758,10 +758,9 @@ p6 3bulan 3x claim
 
         
 
-   <div class="flex gap-2">
-    <button id="btnGen" disabled onclick="handleGen(false)" class="flex-[2] btn-rimuru p-5 rounded-3xl font-black uppercase text-[10px] shadow-[0_10px_30px_-10px_#0ea5e9] shimmer-btn tracking-widest">GENERATE SKILL</button>
-    <button id="btnGenFree" class="hidden flex-1 bg-gradient-to-r from-orange-500 to-red-600 p-5 rounded-3xl font-black uppercase text-[9px] shadow-lg tracking-tighter" onclick="handleGen(true)">FREE GEN</button>
-</div>
+        <button id="btnGen" disabled onclick="handleGen()" class="w-full btn-rimuru p-5 rounded-3xl font-black uppercase text-sm shadow-[0_10px_30px_-10px_#0ea5e9] shimmer-btn tracking-widest">GENERATE SKILL</button>
+
+    </div>
 
 
 
@@ -844,38 +843,20 @@ p6 3bulan 3x claim
         if(role === "admin"){ 
             document.getElementById('adminPanel').classList.remove('hidden'); 
             document.getElementById('btnGen').disabled = false; 
-            document.getElementById('btnGenFree').classList.remove('hidden'); 
             fetchAdminStats(); 
         }
     }
 
-    async function handleGen(isFree = false){
-    if(currentRole !== "admin" && !base64Img) return alert("Wajib Upload Bukti Transfer!");
-    
-    const btn = isFree ? document.getElementById('btnGenFree') : document.getElementById('btnGen');
-    const originalText = btn.innerText;
-    
-    btn.innerText = "PROCESSING...";
-    btn.disabled = true;
-
-    const data = await secureFetch({ 
-        action: "generate", 
-        paket: document.getElementById('paket').value, 
-        image: base64Img,
-        isFree: isFree // Kirim status gratis ke backend
-    });
-
-    if(data && data.status === "success"){
-        document.getElementById('resPaket').innerText = isFree ? data.paket + " (FREE)" : data.paket;
-        document.getElementById('resAccount').innerText = data.email + " | " + data.pass;
-        openModal('resultModal');
-    } else { 
-        alert(data ? data.msg : "Gagal!"); 
+    async function handleGen(){
+        if(currentRole !== "admin" && !base64Img) return alert("Wajib Upload Bukti Transfer!");
+        const btn = document.getElementById('btnGen'); btn.innerText="MANIFESTING..."; btn.disabled=true;
+        const data = await secureFetch({ action:"generate", paket: document.getElementById('paket').value, image: base64Img });
+        if(data && data.status === "success"){
+            document.getElementById('resPaket').innerText=data.paket;
+            document.getElementById('resAccount').innerText=data.email+" | "+data.pass;
+            openModal('resultModal');
+        } else { alert(data ? data.msg : "Stok Terkuras!"); btn.innerText="GENERATE SKILL"; btn.disabled=false; }
     }
-    
-    btn.innerText = originalText;
-    btn.disabled = false;
-}
 
     async function submitUserPass(e){
 
