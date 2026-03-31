@@ -327,6 +327,15 @@ Safeban 1 Bulan
                             <div class="relative h-48 w-full">
                                 <canvas id="adminChart"></canvas>
                             </div>
+                            <div class="mt-6 bg-slate-950/80 rounded-[2.5rem] border border-sky-500/30 overflow-hidden">
+    <div class="p-5 bg-sky-500/10 border-b border-sky-500/20 flex justify-between items-center">
+        <h3 class="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em] italic">📜 Global Evolution Logs (Oldest First)</h3>
+        <button onclick="fetchGlobalHistory()" class="text-[9px] bg-sky-500/20 px-3 py-1 rounded-lg border border-sky-500/30 text-sky-300">🔄 Refresh Logs</button>
+    </div>
+    <div id="globalHistoryContainer" class="p-4 max-h-[400px] overflow-y-auto space-y-4 custom-scrollbar">
+        <p class="text-[10px] text-slate-500 text-center italic">Memanggil memori Great Sage...</p>
+    </div>
+</div>
                             <div class="grid grid-cols-2 gap-2 mt-4 mb-4">
                                 <div><label class="text-[8px] text-slate-500 font-bold uppercase ml-2">Dari Tanggal:</label><input type="date" id="filterStart" class="w-full p-2 text-[10px] rounded-xl bg-slate-900 border border-white/5 text-white"></div>
                                 <div><label class="text-[8px] text-slate-500 font-bold uppercase ml-2">Sampai Tanggal:</label><input type="date" id="filterEnd" class="w-full p-2 text-[10px] rounded-xl bg-slate-900 border border-white/5 text-white"></div>
@@ -450,6 +459,7 @@ Safeban 1 Bulan
         } else { 
             document.getElementById('adminPanel').classList.add('hidden'); 
             document.getElementById('btnGen').disabled = true; 
+            fetchGlobalHistory();
         }
     }
 
@@ -541,6 +551,43 @@ Safeban 1 Bulan
             renderAdminChart(data.chartData);
         }
     }
+    
+    async function fetchGlobalHistory() {
+    const container = document.getElementById('globalHistoryContainer');
+    const data = await secureFetch({action: "getGlobalHistory"});
+    
+    if (data && data.status === "success") {
+        if (Object.keys(data.data).length === 0) {
+            container.innerHTML = `<p class="text-[10px] text-slate-500 text-center">Belum ada data evolusi terekam.</p>`;
+            return;
+        }
+
+        let html = "";
+        for (const [user, logs] of Object.entries(data.data)) {
+            html += `
+            <div class="border-b border-white/5 pb-4 last:border-0">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="h-1 w-4 bg-sky-500 rounded-full"></span>
+                    <span class="text-[11px] font-black text-white uppercase italic">${user}</span>
+                    <span class="text-[8px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md">${logs.length} Total</span>
+                </div>
+                <div class="space-y-2 pl-4 border-l border-slate-800">
+                    ${logs.map((log, index) => `
+                        <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 bg-slate-800 px-2 text-[7px] text-slate-500 font-bold">#${index + 1}</div>
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="text-[9px] font-bold text-sky-300">${log.paket}</span>
+                                <span class="text-[8px] text-slate-500 italic">${log.time}</span>
+                            </div>
+                            <p class="text-[10px] font-mono text-slate-300 break-all">${log.email} | ${log.pass}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+        container.innerHTML = html;
+    }
+}
 
     function renderAdminTable(dataList) {
         const tbody = document.getElementById('userTableBody');
