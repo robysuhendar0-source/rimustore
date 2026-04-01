@@ -126,7 +126,7 @@
             </div>
             <div class="border-t border-white/5 pt-4 grid grid-cols-2 gap-4 text-left px-2">
                 <div class="text-slate-400">Safeban Newbie<br>Safeban Pro</div>
-                <div class="text-orange-400 font-black">💸 50k<br>💸 100k</div>
+                <div class="text-orange-400 font-black">💸 75k<br>💸 125k</div>
             </div>
         </div>
         <div class="p-4"><button onclick="closeModal('resellerModal')" class="w-full btn-rimuru p-4 rounded-2xl font-black text-xs uppercase">Tutup</button></div>
@@ -201,7 +201,6 @@
 ●UNLOCK SUNSET CITY CIRCUIT
 ●35 MOBIL/CAR PREMIUM (Include 4 Elite Apartement)
 ● UNLOCK NEW PREMIUM CAR Lexus LFA & Aston martin AMV, SUPER rare VAN, PORCHE GT( 2 ) , FORD GT ( 2 )  M39 Touring, GCLASS Christmas edition, NEW premium car TESLA AND RARE BATTLEPASS LAMBO AVENTADOR
-● ALL Car unlimited Nos++
 💵PRICE IDR = 150K
 ──────⊹⊱✫⊰⊹──────
 ✍️PAKET 4 [500KMH KMH]
@@ -553,41 +552,36 @@ Safeban 1 Bulan
     }
     
     async function fetchGlobalHistory() {
-    const container = document.getElementById('globalHistoryContainer');
-    const data = await secureFetch({action: "getGlobalHistory"});
-    
-    if (data && data.status === "success") {
-        if (Object.keys(data.data).length === 0) {
-            container.innerHTML = `<p class="text-[10px] text-slate-500 text-center">Belum ada data evolusi terekam.</p>`;
-            return;
-        }
+        const container = document.getElementById('globalHistoryContainer');
+        const data = await secureFetch({action: "getGlobalHistory"});
+        
+        if (data && data.status === "success") {
+            if (!data.data || data.data.length === 0) {
+                container.innerHTML = `<p class="text-[10px] text-slate-500 text-center">Belum ada data evolusi terekam.</p>`;
+                return;
+            }
 
-        let html = "";
-        for (const [user, logs] of Object.entries(data.data)) {
-            html += `
-            <div class="border-b border-white/5 pb-4 last:border-0">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="h-1 w-4 bg-sky-500 rounded-full"></span>
-                    <span class="text-[11px] font-black text-white uppercase italic">${user}</span>
-                    <span class="text-[8px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-md">${logs.length} Total</span>
+            // Render satu list tunggal (Semua User Campur)
+            container.innerHTML = data.data.map((log, index) => `
+                <div class="bg-slate-900/50 p-4 rounded-2xl border border-white/5 relative overflow-hidden mb-3">
+                    <div class="absolute right-0 top-0 bg-sky-500/20 px-3 py-1 text-[8px] text-sky-400 font-black italic rounded-bl-xl">
+                        NEWEST LOG
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded text-slate-400 font-bold">#${data.data.length - index}</span>
+                        <span class="text-[11px] font-black text-sky-400 uppercase italic">${log.user}</span>
+                    </div>
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-bold text-white">${log.paket}</span>
+                        <span class="text-[9px] text-slate-500 italic">${log.time} WIB</span>
+                    </div>
+                    <div class="bg-slate-950/80 p-2 rounded-lg border border-white/5">
+                        <p class="text-[10px] font-mono text-slate-300 break-all select-all">${log.email} | ${log.pass}</p>
+                    </div>
                 </div>
-                <div class="space-y-2 pl-4 border-l border-slate-800">
-                    ${logs.map((log, index) => `
-                        <div class="bg-slate-900/50 p-3 rounded-xl border border-white/5 relative overflow-hidden">
-                            <div class="absolute right-0 top-0 bg-slate-800 px-2 text-[7px] text-slate-500 font-bold">#${index + 1}</div>
-                            <div class="flex justify-between items-start mb-1">
-                                <span class="text-[9px] font-bold text-sky-300">${log.paket}</span>
-                                <span class="text-[8px] text-slate-500 italic">${log.time}</span>
-                            </div>
-                            <p class="text-[10px] font-mono text-slate-300 break-all">${log.email} | ${log.pass}</p>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>`;
+            `).join('');
         }
-        container.innerHTML = html;
     }
-}
 
     function renderAdminTable(dataList) {
         const tbody = document.getElementById('userTableBody');
