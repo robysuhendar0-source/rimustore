@@ -558,14 +558,26 @@ Safeban 1 Bulan
     }
 
     // REVISI 3: UPDATE USER STATS FUNCTION
-    async function updateUserStats(){ 
-        const d = await secureFetch({action:"getUserStats", user: currentUser}); 
-        if(d) {
-            document.getElementById('userRevenue').innerText = "Rp " + (d.revenue || 0).toLocaleString(); 
-            document.getElementById('userSoldToday').innerText = d.soldToday || 0;
-            document.getElementById('userTotalSold').innerText = d.totalSold || 0;
+    async function updateUserStats() {
+    try {
+        const d = await secureFetch({ action: "getUserStats", user: currentUser });
+        if (d && d.status === "success") {
+            // Update elemen Revenue
+            const revEl = document.getElementById('userRevenue');
+            if (revEl) revEl.innerText = "Rp " + (d.revenue || 0).toLocaleString();
+
+            // Update elemen Sold Today
+            const todayEl = document.getElementById('userSoldToday');
+            if (todayEl) todayEl.innerHTML = `${d.soldToday || 0} <span class="text-[9px] text-slate-500">Acc</span>`;
+
+            // Update elemen Total Sold
+            const totalEl = document.getElementById('userTotalSold');
+            if (totalEl) totalEl.innerHTML = `${d.totalSold || 0} <span class="text-[9px] text-slate-500">Acc</span>`;
         }
+    } catch (e) {
+        console.error("Sage Error: Gagal mengambil statistik user", e);
     }
+}
 
     // REVISI 3: FETCH ADMIN STATS FUNCTION
     async function fetchAdminStats() {
