@@ -28,7 +28,6 @@
         .table-container { border-collapse: separate; border-spacing: 0; width: 100%; }
         .table-container thead th { position: sticky; top: 0; background: #0f172a; z-index: 10; border-bottom: 2px solid rgba(125, 211, 252, 0.1); }
         
-        /* TAMBAHAN VISUAL PEMBEDA UPDATE V2 */
         .btn-update-pulse {
             position: relative;
             animation: pulse-update 2s infinite;
@@ -294,13 +293,25 @@ Safeban 1 Bulan
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         <div class="lg:col-span-4 space-y-6">
-            <div class="glass-card p-6 lg:p-10 rounded-[2.5rem] flex justify-between items-center relative overflow-hidden">
+            <div class="glass-card p-6 lg:p-8 rounded-[2.5rem] flex flex-col relative overflow-hidden">
                 <div class="absolute right-0 top-0 opacity-10 pointer-events-none translate-x-4 -translate-y-4"><span class="text-8xl">💎</span></div>
                 <div class="relative z-10">
-                    <span class="text-slate-500 text-[10px] lg:text-xs font-black uppercase tracking-widest italic block mb-1">MANA COLLECTED</span>
-                    <span id="userRevenue" class="text-3xl lg:text-5xl font-black text-white tracking-tight">Rp 0</span>
+                    <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest italic block mb-1">MANA COLLECTED</span>
+                    <span id="userRevenue" class="text-3xl lg:text-4xl font-black text-white tracking-tight">Rp 0</span>
+                    
+                    <div class="flex gap-4 mt-4 pt-4 border-t border-white/5">
+                        <div>
+                            <p class="text-[8px] text-sky-400 font-bold uppercase">Sold Today</p>
+                            <p id="userSoldToday" class="text-lg font-black">0 <span class="text-[9px] text-slate-500">Acc</span></p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] text-indigo-400 font-bold uppercase">Total Sold</p>
+                            <p id="userTotalSold" class="text-lg font-black">0 <span class="text-[9px] text-slate-500">Acc</span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="grid grid-cols-2 gap-3">
                 <button onclick="openModal('priceModal')" class="glass-card p-4 rounded-2xl text-sky-300 font-black text-[10px] tracking-widest shadow-lg border-b-2 border-sky-500/40 uppercase">📜 Price</button>
                 <button onclick="openModal('updateModal')" class="glass-card p-4 rounded-2xl text-slate-400 font-black text-[10px] tracking-widest shadow-lg italic uppercase border-b-2 border-white/10 btn-update-pulse">
@@ -331,14 +342,14 @@ Safeban 1 Bulan
                                 <canvas id="adminChart"></canvas>
                             </div>
                             <div class="mt-6 bg-slate-950/80 rounded-[2.5rem] border border-sky-500/30 overflow-hidden">
-    <div class="p-5 bg-sky-500/10 border-b border-sky-500/20 flex justify-between items-center">
-        <h3 class="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em] italic">📜 Global Evolution Logs (Oldest First)</h3>
-        <button onclick="fetchGlobalHistory()" class="text-[9px] bg-sky-500/20 px-3 py-1 rounded-lg border border-sky-500/30 text-sky-300">🔄 Refresh Logs</button>
-    </div>
-    <div id="globalHistoryContainer" class="p-4 max-h-[400px] overflow-y-auto space-y-4 custom-scrollbar">
-        <p class="text-[10px] text-slate-500 text-center italic">Memanggil memori Great Sage...</p>
-    </div>
-</div>
+                                <div class="p-5 bg-sky-500/10 border-b border-sky-500/20 flex justify-between items-center">
+                                    <h3 class="text-[10px] font-black text-sky-400 uppercase tracking-[0.2em] italic">📜 Global Evolution Logs</h3>
+                                    <button onclick="fetchGlobalHistory()" class="text-[9px] bg-sky-500/20 px-3 py-1 rounded-lg border border-sky-500/30 text-sky-300">🔄 Refresh Logs</button>
+                                </div>
+                                <div id="globalHistoryContainer" class="p-4 max-h-[400px] overflow-y-auto space-y-4 custom-scrollbar">
+                                    <p class="text-[10px] text-slate-500 text-center italic">Memanggil memori Great Sage...</p>
+                                </div>
+                            </div>
                             <div class="grid grid-cols-2 gap-2 mt-4 mb-4">
                                 <div><label class="text-[8px] text-slate-500 font-bold uppercase ml-2">Dari Tanggal:</label><input type="date" id="filterStart" class="w-full p-2 text-[10px] rounded-xl bg-slate-900 border border-white/5 text-white"></div>
                                 <div><label class="text-[8px] text-slate-500 font-bold uppercase ml-2">Sampai Tanggal:</label><input type="date" id="filterEnd" class="w-full p-2 text-[10px] rounded-xl bg-slate-900 border border-white/5 text-white"></div>
@@ -364,12 +375,19 @@ Safeban 1 Bulan
                                 </div>
                             </div>
 
-                            <div class="bg-slate-950 p-5 rounded-3xl border border-white/5 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-400 text-[9px] font-black uppercase italic tracking-widest">Global Omset</span>
-                                <div id="adminGlobalRevenue" class="text-right">
-                                    <span class="text-indigo-400 font-black text-sm">Rp 0</span>
+                            <div class="bg-slate-950 p-5 rounded-3xl border border-white/5 flex flex-col gap-4 shadow-inner">
+                                <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                    <span class="text-slate-400 text-[9px] font-black uppercase italic tracking-widest">Global Sold Out</span>
+                                    <span id="adminTotalSold" class="text-white font-black text-lg">0 <span class="text-xs text-slate-500">Acc</span></span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400 text-[9px] font-black uppercase italic tracking-widest">Global Omset</span>
+                                    <div id="adminGlobalRevenue" class="text-right">
+                                        <span class="text-indigo-400 font-black text-sm">Rp 0</span>
+                                    </div>
                                 </div>
                             </div>
+
                             <button onclick="syncDatabase()" id="btnSync" class="w-full btn-rimuru p-4 rounded-2xl font-black text-[10px] uppercase shadow-lg shimmer-btn tracking-widest">🧹 Harmonize Database</button>
                         </div>
                     </div>
@@ -403,7 +421,7 @@ Safeban 1 Bulan
     const PAKET_LIST = ["Paket 10k", "Paket Hemat", "Paket 1", "Paket 2", "Paket 3", "Paket 4", "Paket 5", "Paket 6", "Safeban Newbie", "Safeban Pro"];
     let base64Img = "", currentUser = "", currentRole = "", sessionToken = "", currentAdminAction = "";
     let rawAdminData = []; let adminChartInstance = null;
-    let filteredData = []; // Untuk menyimpan data yang sudah di-filter
+    let filteredData = []; 
 
     async function secureFetch(payload) {
         if(sessionToken) payload.token = sessionToken;
@@ -423,7 +441,6 @@ Safeban 1 Bulan
     function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
     function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
 
-    // FUNGSI SALIN PRICELIST
     function copyPriceList() {
         const content = document.getElementById("priceContent").innerText;
         const textArea = document.createElement("textarea");
@@ -433,9 +450,7 @@ Safeban 1 Bulan
         try {
             document.execCommand('copy');
             alert("Scroll of Tempest berhasil disalin ke clipboard! 📜✅");
-        } catch (err) {
-            alert("Gagal menyalin scroll.");
-        }
+        } catch (err) { alert("Gagal menyalin scroll."); }
         document.body.removeChild(textArea);
     }
 
@@ -542,14 +557,30 @@ Safeban 1 Bulan
         try { const data = await secureFetch({action:"syncSheet"}); if(data){ alert(data.msg); location.reload(); } } catch(e) { alert("Failed to Sync!"); } finally { btn.innerText = "Harmonize Database"; btn.disabled = false; }
     }
 
-    async function updateUserStats(){ const d = await secureFetch({action:"getUserStats", user: currentUser}); if(d) document.getElementById('userRevenue').innerText="Rp "+(d.revenue||0).toLocaleString(); }
+    // REVISI 3: UPDATE USER STATS FUNCTION
+    async function updateUserStats(){ 
+        const d = await secureFetch({action:"getUserStats", user: currentUser}); 
+        if(d) {
+            document.getElementById('userRevenue').innerText = "Rp " + (d.revenue || 0).toLocaleString(); 
+            document.getElementById('userSoldToday').innerText = d.soldToday || 0;
+            document.getElementById('userTotalSold').innerText = d.totalSold || 0;
+        }
+    }
 
+    // REVISI 3: FETCH ADMIN STATS FUNCTION
     async function fetchAdminStats() {
         const data = await secureFetch({action:"getStats"});
         if(data && data.status === "success"){
             rawAdminData = data.userDetail || [];
-            filteredData = rawAdminData; // Default: semua data
-            document.getElementById('adminGlobalRevenue').innerHTML = `<div class="flex flex-col gap-1"><span class="text-indigo-400 font-black text-sm">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span><span class="text-sky-400 font-bold text-[10px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span></div>`;
+            filteredData = rawAdminData;
+            
+            document.getElementById('adminTotalSold').innerHTML = `${data.totalGlobalSold || 0} <span class="text-xs text-slate-500">Acc</span>`;
+            document.getElementById('adminGlobalRevenue').innerHTML = `
+                <div class="flex flex-col gap-1">
+                    <span class="text-indigo-400 font-black text-sm">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span>
+                    <span class="text-sky-400 font-bold text-[10px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span>
+                </div>`;
+                
             renderAdminTable(rawAdminData); 
             renderAdminChart(data.chartData);
         }
@@ -558,19 +589,14 @@ Safeban 1 Bulan
     async function fetchGlobalHistory() {
         const container = document.getElementById('globalHistoryContainer');
         const data = await secureFetch({action: "getGlobalHistory"});
-        
         if (data && data.status === "success") {
             if (!data.data || data.data.length === 0) {
                 container.innerHTML = `<p class="text-[10px] text-slate-500 text-center">Belum ada data evolusi terekam.</p>`;
                 return;
             }
-
-            // Render satu list tunggal (Semua User Campur)
             container.innerHTML = data.data.map((log, index) => `
                 <div class="bg-slate-900/50 p-4 rounded-2xl border border-white/5 relative overflow-hidden mb-3">
-                    <div class="absolute right-0 top-0 bg-sky-500/20 px-3 py-1 text-[8px] text-sky-400 font-black italic rounded-bl-xl">
-                        NEWEST LOG
-                    </div>
+                    <div class="absolute right-0 top-0 bg-sky-500/20 px-3 py-1 text-[8px] text-sky-400 font-black italic rounded-bl-xl">LOG</div>
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-[10px] bg-white/5 px-2 py-0.5 rounded text-slate-400 font-bold">#${data.data.length - index}</span>
                         <span class="text-[11px] font-black text-sky-400 uppercase italic">${log.user}</span>
@@ -582,8 +608,7 @@ Safeban 1 Bulan
                     <div class="bg-slate-950/80 p-2 rounded-lg border border-white/5">
                         <p class="text-[10px] font-mono text-slate-300 break-all select-all">${log.email} | ${log.pass}</p>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
     }
 
@@ -600,33 +625,22 @@ Safeban 1 Bulan
     function showUserDeepDetail(index) {
         const user = filteredData[index];
         if(!user) return;
-
         document.getElementById('detUserName').innerText = "CITIZEN: " + user.user;
-        const start = document.getElementById('filterStart').value;
-        const end = document.getElementById('filterEnd').value;
+        const start = document.getElementById('filterStart').value, end = document.getElementById('filterEnd').value;
         document.getElementById('detRangeDate').innerText = (start && end) ? `${start} s/d ${end}` : "ALL TIME DATA";
-
-        // Hitung Quantity per Paket
         let paketSummary = {};
-        user.rawLogs.forEach(log => {
-            paketSummary[log.paket] = (paketSummary[log.paket] || 0) + 1;
-        });
-
+        user.rawLogs.forEach(log => { paketSummary[log.paket] = (paketSummary[log.paket] || 0) + 1; });
         document.getElementById('detSummary').innerHTML = Object.entries(paketSummary).map(([name, qty]) => `
             <div class="bg-slate-900 p-3 rounded-xl border border-white/5">
                 <p class="text-[8px] text-slate-500 font-black uppercase">${name}</p>
                 <p class="text-lg font-black text-sky-400">${qty} <span class="text-[10px] text-slate-400 italic">Acc</span></p>
-            </div>
-        `).join('');
-
+            </div>`).join('');
         document.getElementById('detLogsBody').innerHTML = user.rawLogs.map(log => `
             <tr class="border-b border-white/5">
                 <td class="p-3 text-slate-400 italic">${log.jam}</td>
                 <td class="p-3 font-bold text-white">${log.paket}</td>
                 <td class="p-3 text-emerald-400">Rp ${log.harga.toLocaleString()}</td>
-            </tr>
-        `).reverse().join(''); // Reverse agar yang terbaru di atas
-
+            </tr>`).reverse().join('');
         openModal('userDetailModal');
     }
 
@@ -635,18 +649,28 @@ Safeban 1 Bulan
         adminChartInstance = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(chartData), datasets: [{ data: Object.values(chartData), backgroundColor: '#0ea5e9', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#64748b', font: { size: 8 } } } } } });
     }
 
+    // REVISI 3: APPLY ADMIN FILTER FUNCTION
     function applyAdminFilter() {
-        const start = document.getElementById('filterStart').value; const end = document.getElementById('filterEnd').value;
+        const start = document.getElementById('filterStart').value; 
+        const end = document.getElementById('filterEnd').value;
         if (!start || !end) return alert("Pilih kedua tanggal!");
         
+        let globalSoldFiltered = 0;
+        let globalRevFiltered = 0;
+
         filteredData = rawAdminData.map(user => { 
             const logs = user.rawLogs.filter(log => log.tgl >= start && log.tgl <= end); 
             const totalPnd = logs.reduce((sum, item) => sum + item.harga, 0); 
+            globalSoldFiltered += logs.length;
+            globalRevFiltered += totalPnd;
             return { ...user, totalJual: logs.length, totalPnd: totalPnd, rawLogs: logs }; 
         }).filter(u => u.totalJual > 0);
 
+        document.getElementById('adminTotalSold').innerHTML = `${globalSoldFiltered} <span class="text-xs text-slate-500">Acc</span>`;
+        document.getElementById('adminGlobalRevenue').innerHTML = `<span class="text-indigo-400 font-black text-sm">Filtered: Rp ${globalRevFiltered.toLocaleString()}</span>`;
+
         renderAdminTable(filteredData); 
-        alert("Sage: Data Citizen Ter-sinkronisasi!");
+        alert("Sage: Data Filtered Berhasil!");
     }
 
     function handleLogout(){ if(confirm("Log out from Tempest Federation?")){ localStorage.clear(); location.reload(); } }
