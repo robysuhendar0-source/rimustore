@@ -590,24 +590,22 @@ GARANSI SAFEBAN = 1 Bulan
 
     // REVISI 3: FETCH ADMIN STATS FUNCTION
     async function fetchAdminStats() {
-    const data = await secureFetch({action:"getStats"});
-    if(data && data.status === "success"){
-        // Simpan data mentah dari backend ke variable global
-        rawAdminData = data.userDetail || []; 
-        filteredData = [...rawAdminData]; // Default: data filter sama dengan data mentah
-        
-        // Update UI Ringkasan Admin
-        document.getElementById('adminTotalSold').innerHTML = `${data.totalGlobalSold || 0} <span class="text-xs text-slate-500">Acc</span>`;
-        document.getElementById('adminGlobalRevenue').innerHTML = `
-            <div class="flex flex-col gap-1">
-                <span class="text-indigo-400 font-black text-sm">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span>
-                <span class="text-sky-400 font-bold text-[10px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span>
-            </div>`;
+        const data = await secureFetch({action:"getStats"});
+        if(data && data.status === "success"){
+            rawAdminData = data.userDetail || [];
+            filteredData = rawAdminData;
             
-        renderAdminTable(filteredData); 
-        renderAdminChart(data.chartData);
+            document.getElementById('adminTotalSold').innerHTML = `${data.totalGlobalSold || 0} <span class="text-xs text-slate-500">Acc</span>`;
+            document.getElementById('adminGlobalRevenue').innerHTML = `
+                <div class="flex flex-col gap-1">
+                    <span class="text-indigo-400 font-black text-sm">ADM: Rp ${(data.adminRevenue || 0).toLocaleString()}</span>
+                    <span class="text-sky-400 font-bold text-[10px]">RES: Rp ${(data.resellerRevenue || 0).toLocaleString()}</span>
+                </div>`;
+                
+            renderAdminTable(rawAdminData); 
+            renderAdminChart(data.chartData);
+        }
     }
-}
     
     async function fetchGlobalHistory() {
         const container = document.getElementById('globalHistoryContainer');
@@ -674,37 +672,27 @@ GARANSI SAFEBAN = 1 Bulan
 
     // REVISI 3: APPLY ADMIN FILTER FUNCTION
     function applyAdminFilter() {
-    const start = document.getElementById('filterStart').value; 
-    const end = document.getElementById('filterEnd').value;
-    if (!start || !end) return alert("Sage: Pilih rentang tanggal terlebih dahulu!");
-    
-    let globalSoldFiltered = 0;
-    let globalRevFiltered = 0;
-
-    // Filter logs di dalam setiap user
-    filteredData = rawAdminData.map(user => { 
-        const logs = user.rawLogs.filter(log => log.tgl >= start && log.tgl <= end); 
-        const totalPnd = logs.reduce((sum, item) => sum + item.harga, 0); 
+        const start = document.getElementById('filterStart').value; 
+        const end = document.getElementById('filterEnd').value;
+        if (!start || !end) return alert("Pilih kedua tanggal!");
         
-        if (logs.length > 0) {
+        let globalSoldFiltered = 0;
+        let globalRevFiltered = 0;
+
+        filteredData = rawAdminData.map(user => { 
+            const logs = user.rawLogs.filter(log => log.tgl >= start && log.tgl <= end); 
+            const totalPnd = logs.reduce((sum, item) => sum + item.harga, 0); 
             globalSoldFiltered += logs.length;
             globalRevFiltered += totalPnd;
-        }
-        
-        return { ...user, totalJual: logs.length, totalPnd: totalPnd, rawLogs: logs }; 
-    }).filter(u => u.totalJual > 0); // Hanya tampilkan user yang punya transaksi di tanggal tersebut
+            return { ...user, totalJual: logs.length, totalPnd: totalPnd, rawLogs: logs }; 
+        }).filter(u => u.totalJual > 0);
 
-    // Update UI dengan hasil filter
-    document.getElementById('adminTotalSold').innerHTML = `${globalSoldFiltered} <span class="text-xs text-slate-500">Acc</span>`;
-    document.getElementById('adminGlobalRevenue').innerHTML = `
-        <div class="flex flex-col gap-1">
-            <span class="text-indigo-400 font-black text-sm">Filtered: Rp ${globalRevFiltered.toLocaleString()}</span>
-            <span class="text-slate-500 text-[9px] italic">Range: ${start} - ${end}</span>
-        </div>`;
+        document.getElementById('adminTotalSold').innerHTML = `${globalSoldFiltered} <span class="text-xs text-slate-500">Acc</span>`;
+        document.getElementById('adminGlobalRevenue').innerHTML = `<span class="text-indigo-400 font-black text-sm">Filtered: Rp ${globalRevFiltered.toLocaleString()}</span>`;
 
-    renderAdminTable(filteredData); 
-    alert("Sage: Analisis data selesai!");
-}}
+        renderAdminTable(filteredData); 
+        alert("Sage: Data Filtered Berhasil!");
+    }
 
     function handleLogout(){ if(confirm("Log out from Tempest Federation?")){ localStorage.clear(); location.reload(); } }
     
